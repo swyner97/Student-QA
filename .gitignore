@@ -1,0 +1,8 @@
+/bin/
+.DS_Store
+.classpath
+.project
+.settings
+h2
+JUnit 4
+module-info.java
