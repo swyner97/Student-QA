@@ -17,7 +17,6 @@ import model.NavigationBar;
 import model.Question;
 import model.Questions;
 import model.User;
-import model.User.Role;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 

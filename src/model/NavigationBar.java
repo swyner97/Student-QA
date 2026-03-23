@@ -18,6 +18,11 @@ public class NavigationBar extends ToolBar {
 
     private Button notificationButton;
     private Timeline notificationTimeline;
+    
+    private void navigate(String pageName, Runnable action) {
+        System.out.println("Navigating to: " + pageName);
+        action.run();
+    }
 
     public NavigationBar() {
         // Set styling for the navigation bar
@@ -26,8 +31,11 @@ public class NavigationBar extends ToolBar {
         // Home button
         Button welcomePageButton = createStyledButton("🏠 Home");
         welcomePageButton.setOnAction(_ -> {
-            if (StatusData.primaryStage != null)
-                new WelcomeLoginPage().show(StatusData.primaryStage, StatusData.currUser);
+            if (StatusData.primaryStage != null) {
+                navigate("Home / WelcomeLoginPage", () ->
+                    new WelcomeLoginPage().show(StatusData.primaryStage, StatusData.currUser)
+                );
+            }
         });
         this.getItems().add(welcomePageButton);
         this.getItems().add(new Separator(Orientation.VERTICAL));
@@ -36,24 +44,30 @@ public class NavigationBar extends ToolBar {
         MenuButton searchMenu = createStyledMenuButton("🔍 Search");
         MenuItem searchGeneral = new MenuItem("General Search");
         searchGeneral.setOnAction(_ -> {
-            UserQAMenu qaMenuPage = new UserQAMenu();
-            qaMenuPage.start(StatusData.primaryStage);
+            navigate("General Search (UserQAMenu)", () -> {
+                UserQAMenu qaMenuPage = new UserQAMenu();
+                qaMenuPage.start(StatusData.primaryStage);
+            });
         });
         MenuItem searchQs = new MenuItem("Search Questions");
         searchQs.setOnAction(_ -> {
-            SearchPage searchQsPage = new SearchPage();
-            searchQsPage.show(StatusData.primaryStage, StatusData.currUser);
+            navigate("Search Questions", () ->
+                new SearchPage().show(StatusData.primaryStage, StatusData.currUser)
+            );
         });
         MenuItem searchAs = new MenuItem("Search Answers");
         searchAs.setOnAction(_ -> {
-            SearchAsPage searchAsPage = new SearchAsPage();
-            searchAsPage.show(StatusData.primaryStage, StatusData.currUser);
+            navigate("Search Answers", () ->
+                new SearchAsPage().show(StatusData.primaryStage, StatusData.currUser)
+            );
         });
         MenuItem searchMyPosts = new MenuItem("My Posts");
         searchMyPosts.setOnAction(_ -> {
-            MyPostsPage postsPage = new MyPostsPage();
-            Stage postsStage = new Stage();
-            postsPage.show(postsStage);
+            navigate("My Posts", () -> {
+                MyPostsPage postsPage = new MyPostsPage();
+                Stage postsStage = new Stage();
+                postsPage.show(postsStage);
+            });
         });
         searchMenu.getItems().addAll(searchGeneral, searchQs, searchAs, new SeparatorMenuItem(), searchMyPosts);
         this.getItems().add(searchMenu);
@@ -63,10 +77,10 @@ public class NavigationBar extends ToolBar {
         notificationButton = createStyledButton("Notifications");
         notificationButton.setOnAction(_ -> {
             if (StatusData.currUser != null && StatusData.primaryStage != null) {
-                NotificationsPage notifPage = new NotificationsPage();
-                notifPage.show(StatusData.primaryStage, StatusData.currUser);
-
-                updateNotificationButton();
+                navigate("Notifications Page", () -> {
+                    new NotificationsPage().show(StatusData.primaryStage, StatusData.currUser);
+                    updateNotificationButton();
+                });
             }
         });
         this.getItems().add(notificationButton);
@@ -104,11 +118,12 @@ public class NavigationBar extends ToolBar {
             
             MenuItem userMgmt = new MenuItem("User Management");
             userMgmt.setOnAction(_ -> {
-            	AdminHomePage homePage = new AdminHomePage();
-            	Stage stage = (Stage) this.getScene().getWindow();
-            	homePage.show(stage, StatusData.currUser.getUserName());
+                navigate("Admin Home (User Management)", () -> {
+                    AdminHomePage homePage = new AdminHomePage();
+                    Stage stage = (Stage) this.getScene().getWindow();
+                    homePage.show(stage, StatusData.currUser.getUserName());
+                });
             });
-            
             MenuItem adminRequestsItem = new MenuItem("Admin Requests");
             adminRequestsItem.setOnAction(_ -> {
                 AdminRequestsPage requestsPage = new AdminRequestsPage();
@@ -134,7 +149,11 @@ public class NavigationBar extends ToolBar {
 
         MenuItem profilePageButton = new MenuItem("👤 Profile");
         profilePageButton.setOnAction(_ -> {
-            if (currentUser != null) new ProfilePage().show(StatusData.primaryStage, currentUser);
+            if (currentUser != null) {
+                navigate("Profile Page", () ->
+                    new ProfilePage().show(StatusData.primaryStage, currentUser)
+                );
+            }
         });
 
         MenuItem myQA = new MenuItem("💬 My Q&A");
@@ -147,10 +166,10 @@ public class NavigationBar extends ToolBar {
 
         MenuItem messagesPageItem = new MenuItem("✉️ Messages");
         messagesPageItem.setOnAction(_ -> {
-            MessagingPage messagingPage = new MessagingPage();
-            messagingPage.show(StatusData.primaryStage);
+            navigate("Messaging Page", () ->
+                new MessagingPage().show(StatusData.primaryStage)
+            );
         });
-
         MenuItem trustedReviewers = new MenuItem("Trusted Reviewers");
         trustedReviewers.setOnAction(_ -> {
             TrustedReviewersPage trustedPage = new TrustedReviewersPage();

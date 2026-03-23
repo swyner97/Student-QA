@@ -16,7 +16,7 @@ import java.util.*;
 import databasePart1.DatabaseHelper;
 
 
-public class StartCSE360 extends Application {
+public class StartApp extends Application {
 
 	private static final DatabaseHelper databaseHelper = new DatabaseHelper();
 	
