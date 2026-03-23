@@ -11,7 +11,7 @@ import model.User.Role;
 
 
 /**
- * Representes a generic user in the system, encapsulating common attributes such as
+ * Represents a generic user in the system, encapsulating common attributes such as
  * ID, username, password, role, name, and email.
  * <p>
  * This class serves as the base for all user types, including students, reviewers,
@@ -35,30 +35,108 @@ public class User {
     /* ---------- Factory helpers ---------- */
 
     // Accept Role
-    public static User createUser(int id, String userName, String password, Role role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public static User createUser(int id, String userName, String password, Role role, String name, String email, String tempPw) { 
+
         return new User(id, userName, password, role, name, email, tempPw);
     }
 
     // Accept role as String
-    public static User createUser(int id, String userName, String password, String role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public static User createUser(int id, String userName, String password, String role, String name, String email, String tempPw) { 
+
         return new User(id, userName, password, Role.fromString(role), name, email, tempPw);
     }
     
-    public static User createUser(String userName, String password, Role role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public static User createUser(String userName, String password, Role role, String name, String email, String tempPw) { 
+
         return new User(0, userName, password, role, name, email, tempPw);
     }
 
-    public static User createUser(String userName, String password, String role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public static User createUser(String userName, String password, String role, String name, String email, String tempPw) { 
+
         return new User(0, userName, password, Role.fromString(role), name, email, tempPw);
     }
 
-    public static User createUser(String userName, String password, String role) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ */
+    public static User createUser(String userName, String password, String role) { 
+
         return new User(0, userName, password, Role.fromString(role), "", "", null);
     }
 
     /* ---------- Constructors ---------- */
 
-    public User(int id, String userName, String password, Role role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public User(int id, String userName, String password, Role role, String name, String email, String tempPw) { 
+
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -69,22 +147,63 @@ public class User {
         this.bio = bio;
         this.tempPw = tempPw;
         
-        // ADDING THIS for multiple roles:
         this.roles = new ArrayList<>();
         this.roles.add(this.role);  // initialize with single primary role
     }
 
-    public User(String userName, String password, Role role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public User(String userName, String password, Role role, String name, String email, String tempPw) { 
+
         this(0, userName, password, role, name, email, tempPw);
     }
 
-    public User(String userName, String password, String role, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public User(String userName, String password, String role, String name, String email, String tempPw) { 
+
         this(0, userName, password, Role.fromString(role), name, email, tempPw);
 
     }
     
     //Constructor with phone and bio to maintain table completeness
-    public User(int id, String userName, String password, Role role, String name, String email, String phone, String bio, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param phone  the phone. 
+ * @param bio  the bio. 
+ * @param tempPw  the temp pw. 
+ */
+    public User(int id, String userName, String password, Role role, String name, String email, String phone, String bio, String tempPw) { 
+
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -96,12 +215,44 @@ public class User {
         this.tempPw = tempPw;
     }
     
-    public static User createUser(int id, String userName, String password, String role, String name, String email, String phone, String bio, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param role  the role. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param phone  the phone. 
+ * @param bio  the bio. 
+ * @param tempPw  the temp pw. 
+ */
+    public static User createUser(int id, String userName, String password, String role, String name, String email, String phone, String bio, String tempPw) { 
+
         return new User(id, userName, password, Role.fromString(role), name, email, phone, bio, tempPw);
     }
 
     //constructor accepting multiple roles
-    public User(int id, String userName, String password, List<Role> roles, String name, String email, String phone, String bio, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param roles  the roles. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param phone  the phone. 
+ * @param bio  the bio. 
+ * @param tempPw  the temp pw. 
+ */
+    public User(int id, String userName, String password, List<Role> roles, String name, String email, String phone, String bio, String tempPw) { 
+
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -114,7 +265,21 @@ public class User {
         this.tempPw = tempPw;
     }
     
-    public User(int id, String userName, String password, List<Role> roles, String name, String email, String tempPw) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param id  the id. 
+ * @param userName  the user name. 
+ * @param password  the password. 
+ * @param roles  the roles. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param tempPw  the temp pw. 
+ */
+    public User(int id, String userName, String password, List<Role> roles, String name, String email, String tempPw) { 
+
         this(id, userName, password, roles, name, email, null, null, tempPw);
     }
     /* ---------- Role enum ---------- */
@@ -128,7 +293,16 @@ public class User {
         STAFF,
         UNKNOWN;
 
-        public static Role fromString(String s) {
+
+/** 
+ *
+ * From string
+ *
+ * @param s  the s. 
+ * @return Role
+ */
+        public static Role fromString(String s) { 
+
             if (s == null) return UNKNOWN;
             try {
                 return Role.valueOf(s.trim().toUpperCase());
@@ -140,7 +314,15 @@ public class User {
 
     /* ---------- Getters / Setters ---------- */
 
-    public int getId() { return id; }
+
+
+/** 
+ *
+ * Gets the identifier
+ *
+ * @return the identifier
+ */
+    public int getId() { return id; } 
     public String getUserName() { return userName; }
     public String getPassword() { return password; }
 
@@ -152,16 +334,26 @@ public class User {
 
     //when user has more than one role
     public List<Role> getRoles() {
+
     	return roles == null ? List.of() : roles;
     }
     
-    public String getName() { return name; }
+
+
+/** 
+ *
+ * Gets the name
+ *
+ * @return the name
+ */
+    public String getName() { return name; } 
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
     public String getBio() { return bio; }
     public String getTempPw() { return tempPw; }
 
     public List<Question> getUserQuestions() {
+
         return StatusData.databaseHelper.searchQuestions(null, getName(), null);
     }
 
@@ -176,7 +368,15 @@ public class User {
     public void setRole(String role) { this.role = Role.fromString(role); }
     
     //set role in list
-    public void setRoles(List<Role> roles) {
+
+/** 
+ *
+ * Sets the roles
+ *
+ * @param roles  the roles. 
+ */
+    public void setRoles(List<Role> roles) { 
+
     	this.roles = roles;
     }
     public void setName(String name) { this.name = name; }
@@ -195,7 +395,15 @@ public class User {
                 ", email='" + email + '\'' +
                 '}';
     }*/
-    public String toString() {
+
+/** 
+ *
+ * To string
+ *
+ * @return String
+ */
+    public String toString() { 
+
     	if (name != null && !name.isEmpty()) {
     		return name + " (" + userName + ")";
     	}
@@ -207,7 +415,8 @@ public class User {
     /**
      * Returns true for roles that should be treated as privileged (admin/instructor/reviewer/ta/staff).
      */
-    public boolean isPrivileged() {
+    public boolean isPrivileged() { 
+
         Role r = getRole();
         return r == Role.ADMIN || r == Role.INSTRUCTOR || r == Role.REVIEWER || r == Role.TA || r == Role.STAFF;
     }
@@ -216,7 +425,8 @@ public class User {
      * Convenience used by the UI: can this user mark an answer as solution?
      * By default privileged users or the question author may mark as solution.
      */
-    public boolean canMarkSolution(Question q) {
+    public boolean canMarkSolution(Question q) { 
+
         if (isPrivileged()) return true;
         if (q == null) return false;
         if (this.name == null) return false;
@@ -224,15 +434,48 @@ public class User {
     }
     
     /* ---------------- Trusted Reviewer Functions ---------------- */
-    public boolean isTrusted(User reviewer, DatabaseHelper db) throws SQLException {
+
+/** 
+ *
+ * Is trusted
+ *
+ * @param reviewer  the reviewer. 
+ * @param db  the db. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean isTrusted(User reviewer, DatabaseHelper db) throws SQLException { 
+
     	return db.isTrusted(this.getId(), reviewer.getId());
     }
     
-    public boolean addTrustedReviewer(User reviewer, DatabaseHelper db) throws SQLException {
+
+/** 
+ *
+ * Add trusted reviewer
+ *
+ * @param reviewer  the reviewer. 
+ * @param db  the db. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean addTrustedReviewer(User reviewer, DatabaseHelper db) throws SQLException { 
+
     	return db.addTrustedReviewer(this.getId(), reviewer.getId());
     }
     
-    public boolean removeTrustedReviewer(User reviewer, DatabaseHelper db) throws SQLException {
+
+/** 
+ *
+ * Remove trusted reviewer
+ *
+ * @param reviewer  the reviewer. 
+ * @param db  the db. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean removeTrustedReviewer(User reviewer, DatabaseHelper db) throws SQLException { 
+
     	return db.removeTrustedReviewer(this.getId(), reviewer.getId());
     }
     

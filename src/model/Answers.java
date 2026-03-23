@@ -24,14 +24,29 @@ public class Answers {
     private int nextId;
     private DatabaseHelper db;
 
-    public Answers(DatabaseHelper db) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param db  the db. 
+ */
+    public Answers(DatabaseHelper db) { 
+
         this.answers = new HashMap<>();
         this.nextId = 1;
         this.db = db;
         loadAnswersFromDatabase();
     }
 
-    private void loadAnswersFromDatabase() {
+
+/** 
+ *
+ * Load answers from database
+ *
+ */
+    private void loadAnswersFromDatabase() { 
+
         List<Answer> dbAnswers = db.loadAllAnswers();
         for (Answer ans : dbAnswers) {
             answers.put(ans.getAnswerId(), ans);
@@ -42,7 +57,19 @@ public class Answers {
         System.out.println("Loaded " + answers.size() + " answers from database.");
     }
 
-    public Result create(int userId, int questionId, String author, String content) {
+
+/** 
+ *
+ * Create
+ *
+ * @param userId  the user identifier. 
+ * @param questionId  the question identifier. 
+ * @param author  the author. 
+ * @param content  the content. 
+ * @return Result
+ */
+    public Result create(int userId, int questionId, String author, String content) { 
+
         if (author == null || author.isBlank()) {
             return new Result(false, "Author is required.", null);
         }
@@ -63,15 +90,41 @@ public class Answers {
         }
     }
 
-    public Answer read(int answerId) {
+
+/** 
+ *
+ * Read
+ *
+ * @param answerId  the answer identifier. 
+ * @return Answer
+ */
+    public Answer read(int answerId) { 
+
         return answers.get(answerId);
     }
 
-    public List<Answer> readAll() {
+
+/** 
+ *
+ * Read all
+ *
+ * @return List<Answer>
+ */
+    public List<Answer> readAll() { 
+
         return new ArrayList<>(answers.values());
     }
 
-    public List<Answer> readByQuestionId(int questionId) {
+
+/** 
+ *
+ * Read by question identifier
+ *
+ * @param questionId  the question identifier. 
+ * @return List<Answer>
+ */
+    public List<Answer> readByQuestionId(int questionId) { 
+
     	try {
 			return db.getAnswersByQuestionId(questionId);
 		} catch (SQLException e) {
@@ -85,7 +138,20 @@ public class Answers {
      * Updates an existing answer if permitted.
      * Students can update their own; staff/admins can update any.
      */
-    public Result update(int answerId, int questionId, User currUser, String content, Boolean isSolution) {
+
+/** 
+ *
+ * Update
+ *
+ * @param answerId  the answer identifier. 
+ * @param questionId  the question identifier. 
+ * @param currUser  the curr user. 
+ * @param content  the content. 
+ * @param isSolution  the is solution. 
+ * @return Result
+ */
+    public Result update(int answerId, int questionId, User currUser, String content, Boolean isSolution) { 
+
         List<Question> qList = db.loadAllQs();
         Question question = qList.stream()
                 .filter(q -> q.getQuestionId() == questionId)
@@ -128,7 +194,17 @@ public class Answers {
      * Deletes an answer if permitted.
      * Students can delete their own; staff/admins can delete any.
      */
-    public Result delete(int answerId, User user) {
+
+/** 
+ *
+ * Delete
+ *
+ * @param answerId  the answer identifier. 
+ * @param user  the user. 
+ * @return Result
+ */
+    public Result delete(int answerId, User user) { 
+
         Answer answer = answers.get(answerId);
 
         if (answer == null) {
@@ -156,7 +232,8 @@ public class Answers {
     }
 
     /** Search helpers */
-    public List<Answer> search(int questionId, String keyword, Boolean solutionOnly) {
+    public List<Answer> search(int questionId, String keyword, Boolean solutionOnly) { 
+
         return answers.values().stream()
                 .filter(a -> a.getQuestionId() == questionId)
                 .filter(a -> (keyword == null || keyword.isEmpty()
@@ -166,7 +243,18 @@ public class Answers {
                 .collect(Collectors.toList());
     }
 
-    public List<Answer> search(String keyword, String author, Boolean solutionOnly) {
+
+/** 
+ *
+ * Search
+ *
+ * @param keyword  the keyword. 
+ * @param author  the author. 
+ * @param solutionOnly  the solution only. 
+ * @return List<Answer>
+ */
+    public List<Answer> search(String keyword, String author, Boolean solutionOnly) { 
+
         String kw = keyword == null ? "" : keyword.toLowerCase();
         String au = author == null ? "" : author.toLowerCase();
 
@@ -180,7 +268,17 @@ public class Answers {
                 .collect(Collectors.toList());
     }
     
-    public Result setSolution(int answerId, boolean isSolution) {
+
+/** 
+ *
+ * Sets the solution
+ *
+ * @param answerId  the answer identifier. 
+ * @param isSolution  the is solution. 
+ * @return Result
+ */
+    public Result setSolution(int answerId, boolean isSolution) { 
+
     	try {
 	    	Answer answer;
 			answer = StatusData.databaseHelper.getAnswerById(answerId);
@@ -189,10 +287,6 @@ public class Answers {
 	            return new Result(false, "Answer not found.", null);
 	        }
 			
-//			int questionId = answer.getQuestionId();
-//			System.out.println("Question id = " + questionId);
-			
-			// Load question fresh from DB
 	        Question question = StatusData.databaseHelper.getQuestionById(answer.getQuestionId());
 	        if (question == null) {
 	            return new Result(false, "Question not found.", null);
@@ -215,41 +309,27 @@ public class Answers {
 	                    "You do not have permission to mark solutions.",
 	                    null);
 	        }
-			//first update solution status for answer
+
 			StatusData.databaseHelper.updateAnswerSolutionStatus(answerId, isSolution);
 			answer.setSolution(isSolution);
 			
-			//sync inmemory cache in case we are still using it somewhere instead of database
+		
 			Answer cached = answers.get(answerId);
 			if (cached != null) {
 			    cached.setSolution(isSolution);
 			}
 	
-			//check if there are any resolved solutions
+	
 	        List<Answer> allAnswers = StatusData.databaseHelper.getAnswersByQuestionId(question.getQuestionId());
 	        boolean anyMarked = allAnswers.stream().anyMatch(Answer::isSolution);
 			System.out.println("anyMarked = " + anyMarked + ", questionId = " + question.getQuestionId() + ", answerId = " + answerId);
-	        //update question status based on if there are any solutions
-//	        Question question = StatusData.databaseHelper.getQuestionById(question.getQuestionId());
-//	        if (question != null) {
-//	            if (anyMarked) {
-//	            	question.setResolved(true);
-//	                question.markResolved();
-//	                System.out.println("question status = " + question.isResolved());
-//	            } else {
-//	            	question.setResolved(false);
-//	                question.markUnresolved();
-//	                System.out.println("question status = " + question.isResolved());
-//	            }
-//			
-//	            StatusData.databaseHelper.updateQuestionResolved(questionId, question.isResolved());
-//	        }
+	     
 			question.setResolved(anyMarked);
 	        StatusData.databaseHelper.updateQuestionResolved(question.getQuestionId(), anyMarked);
 			return new Result(true, "Solution status updated.", null);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 			return new Result(false, "Database error: " + e.getMessage(), null);
 		}  
@@ -257,7 +337,15 @@ public class Answers {
     
 
 
-    public int size() {
+
+/** 
+ *
+ * Size
+ *
+ * @return int
+ */
+    public int size() { 
+
         return answers.size();
     }
 }

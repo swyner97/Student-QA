@@ -18,16 +18,13 @@ import logic.StatusData;
 import model.NavigationBar;
 import model.User;
 
-/**
- * AdminHomePage represents the admin interface.
- * It allows admins to manage user accounts, reset passwords,
- * and modify user roles (Admin, Student, Reviewer, Instructor, Staff).
- *
- * NOTE: Students are now allowed to make edits in the system —
- * so "Student" is no longer a restricted or limited role.
- */
+
 @SuppressWarnings("unchecked")
 
+
+ /**
+ * The class Admin home page
+ */ 
 public class AdminHomePage {
 
     private final DatabaseHelper databaseHelper;
@@ -35,11 +32,29 @@ public class AdminHomePage {
 
     private Stage stage;
     
-    public AdminHomePage() {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ */
+    public AdminHomePage() {  
+
+
         this(StatusData.databaseHelper, StatusData.currUser);
     }
 
-    public AdminHomePage(DatabaseHelper databaseHelper, User currentUser) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param databaseHelper  the database helper. 
+ * @param currentUser  the current user. 
+ */
+    public AdminHomePage(DatabaseHelper databaseHelper, User currentUser) {  
+
+
         this.databaseHelper = databaseHelper;
         this.currentUser = currentUser;
     }
@@ -49,7 +64,9 @@ public class AdminHomePage {
  * @param primaryStage 
  */
 
-    public void show(Stage primaryStage) {
+    public void show(Stage primaryStage) {  
+
+
         show(primaryStage, currentUser.getUserName());
     }
 /**
@@ -59,7 +76,9 @@ public class AdminHomePage {
  * @param loggedInAdminUserName 
  */
 
-    public void show(Stage primaryStage, String loggedInAdminUserName) {
+    public void show(Stage primaryStage, String loggedInAdminUserName) {  
+
+
     	this.stage = primaryStage;
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(new NavigationBar());
@@ -75,7 +94,7 @@ public class AdminHomePage {
             new UpdateAccountPage(databaseHelper, currentUser).show(primaryStage)
         );
 
-        // 🔹 OTP reset section
+
         Label resetLabel = new Label("Reset password for user:");
         resetLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         Label resultLabel = new Label();
@@ -101,7 +120,7 @@ public class AdminHomePage {
 
         VBox otpSection = new VBox(5, resetLabel, userNameField, otpButton, resultLabel);
 
-        // 🔹 User Table setup
+       
         TableView<User> userTable = new TableView<>();
         userTable.setEditable(true);
 
@@ -118,7 +137,9 @@ public class AdminHomePage {
  * @param item 
  * @param empty 
  */
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(String item, boolean empty) {  
+
+
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
@@ -155,7 +176,9 @@ public class AdminHomePage {
  * @param item 
  * @param empty 
  */
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(String item, boolean empty) {  
+
+
                 super.updateItem(item, empty);
                 if (!empty) {
                     User user = getTableRow().getItem();
@@ -171,7 +194,7 @@ public class AdminHomePage {
             }
         });
         
-        // ✅ Allow admin to assign or remove any roles, including student
+
         TableColumn<User, User.Role> addRolesCol = new TableColumn<>("Add Role");
         addRolesCol.setCellValueFactory(new PropertyValueFactory<>("role"));
         ObservableList<User.Role> rolesList = FXCollections.observableArrayList(
@@ -189,11 +212,6 @@ public class AdminHomePage {
             	  databaseHelper.addUserRoles(user.getUserName(), newRole);
                 System.out.println("Added role '" + newRole + "' for user: " + user.getUserName());
 
-                //user.setRoles(databaseHelper.getAllRolesForUser(user.getUserName()));
-                //ObservableList<User> updatedUsers = databaseHelper.getAllUsers();
-                //event.getTableView().setItems(updatedUsers);
-                
-
                 userTable.refresh();
 
             } catch (SQLException e) {
@@ -208,20 +226,17 @@ public class AdminHomePage {
             User user = event.getRowValue();
             User.Role roleToDelete = event.getNewValue();
             try {
-
-            	//make sureuser isn't left with zero roles
+         
                 if (user.getRoles().size() == 1) {
                     System.out.println("Cannot delete the only remaining role for user: " + user.getUserName());
                     return;
                 }
                 
-
                 databaseHelper.deleteUserRole(user.getUserName(), roleToDelete);
                 System.out.println("Removed role '" + roleToDelete + "' for user: " + user.getUserName());
                 user.setRoles(databaseHelper.getAllRolesForUser(user.getUserName()));
                 
-                //ObservableList<User> updatedUsers = databaseHelper.getAllUsers();
-                //event.getTableView().setItems(updatedUsers);
+             
                 event.getTableView().refresh();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -242,16 +257,20 @@ public class AdminHomePage {
         layout.getChildren().addAll(adminLabel, updateAccountButton, otpSection, userTable);
         borderPane.setCenter(layout);
 
-//        Scene adminScene = new Scene(borderPane, StatusData.WINDOW_WIDTH, StatusData.WINDOW_HEIGHT);
-//        primaryStage.setScene(adminScene);
-//        primaryStage.setTitle("Admin Page");
-//        primaryStage.show();
         
         StatusData.setScene(primaryStage, borderPane);
         primaryStage.setTitle("Admin Page");
     }
     
-    public void refreshUsers() {
+
+/** 
+ *
+ * Refresh users
+ *
+ */
+    public void refreshUsers() {  
+
+
       	 if (this.stage != null) {
       	        show(this.stage);
       	    }

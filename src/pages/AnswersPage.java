@@ -50,13 +50,31 @@ public class AnswersPage {
     private Label submitTitle;
     private Answer editingAnswer = null;
   
-    public AnswersPage(Object parentPage, Question question) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param parentPage  the parent page. 
+ * @param question  the question. 
+ */
+    public AnswersPage(Object parentPage, Question question) { 
+
         this.parentPage = parentPage;
         AnswersPage.question = question;
     }
 
     @SuppressWarnings("unused")
-	public void show(Stage stage, User user) {
+
+/** 
+ *
+ * Show
+ *
+ * @param stage  the stage. 
+ * @param user  the user. 
+ */
+	public void show(Stage stage, User user) { 
+
         this.user = user;
         answers = new Answers(StatusData.databaseHelper);
       
@@ -278,7 +296,15 @@ public class AnswersPage {
 		        });
 	        }
         	
-        	private void updateFlagButtonStyle(Object item) {
+
+/** 
+ *
+ * Update flag button style
+ *
+ * @param item  the item. 
+ */
+        	private void updateFlagButtonStyle(Object item) { 
+
         		int itemId;
         		ContentType type;
 
@@ -316,7 +342,16 @@ public class AnswersPage {
     		}
         	
         	@Override
-        	protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+        	protected void updateItem(Void item, boolean empty) { 
+
         		super.updateItem(item, empty);
         		if (empty || getTableRow() == null || getTableRow().getItem() == null) {
         			setGraphic(null);
@@ -363,7 +398,16 @@ public class AnswersPage {
             }
 
             @Override
-            protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+            protected void updateItem(Void item, boolean empty) { 
+
                 super.updateItem(item, empty);
 
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
@@ -420,7 +464,16 @@ public class AnswersPage {
             	});
             }
             @Override
-            protected void updateItem(Boolean item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+            protected void updateItem(Boolean item, boolean empty) { 
+
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);
@@ -431,7 +484,15 @@ public class AnswersPage {
                     setGraphic(solutionBtn);
                 }
             }
-            private void updateToggleText(boolean isSolution) {
+
+/** 
+ *
+ * Update toggle text
+ *
+ * @param isSolution  the is solution. 
+ */
+            private void updateToggleText(boolean isSolution) { 
+
                 if (isSolution) {
                 	solutionBtn.setText("★");
                 	solutionBtn.setStyle("-fx-background-color: gray; -fx-text-fill: gold;");
@@ -467,7 +528,16 @@ public class AnswersPage {
 	            });
         	}
         	 @Override
-             protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+             protected void updateItem(Void item, boolean empty) { 
+
                  super.updateItem(item, empty);
                  setGraphic(empty ? null : suggestClarification);
              }
@@ -489,7 +559,16 @@ public class AnswersPage {
             }
 
             @Override
-            protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+            protected void updateItem(Void item, boolean empty) { 
+
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
@@ -515,7 +594,16 @@ public class AnswersPage {
 
         answerTable.setRowFactory(tv -> new TableRow<>() {
         	@Override
-        	protected void updateItem(Answer answer, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param answer  the answer. 
+ * @param empty  the empty. 
+ */
+        	protected void updateItem(Answer answer, boolean empty) { 
+
         		super.updateItem(answer, empty);
         		if (empty || answer == null) {
                     setStyle(""); 
@@ -642,7 +730,15 @@ public class AnswersPage {
     		
     	}
         	
-        	private void updateFlagButtonStyle(Object item) {
+
+/** 
+ *
+ * Update flag button style
+ *
+ * @param item  the item. 
+ */
+        	private void updateFlagButtonStyle(Object item) { 
+
         		int itemId;
         	    ContentType type;
         		
@@ -689,7 +785,16 @@ public class AnswersPage {
     		}
 
         	@Override
-        	protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+        	protected void updateItem(Void item, boolean empty) { 
+
         		super.updateItem(item, empty);
         		if (empty || getTableRow() == null || getTableRow().getItem() == null) {
         			setGraphic(null);
@@ -871,7 +976,16 @@ public class AnswersPage {
         loadAnswers();
     }
 
-    private void submitAnswer(String content, boolean isSolution) {
+
+/** 
+ *
+ * Submit answer
+ *
+ * @param content  the content. 
+ * @param isSolution  the is solution. 
+ */
+    private void submitAnswer(String content, boolean isSolution) { 
+
         answers.create(
                 user.getId(), // userId
                 question.getQuestionId(), // questionId
@@ -882,7 +996,15 @@ public class AnswersPage {
     
  
     @SuppressWarnings("unused")
-	private void showClarificationPopup(Answer answer) {
+
+/** 
+ *
+ * Show clarification popup
+ *
+ * @param answer  the answer. 
+ */
+	private void showClarificationPopup(Answer answer) { 
+
 		Stage popup = new Stage();
 		popup.setTitle("Suggest Clarification");
 		
@@ -972,7 +1094,15 @@ public class AnswersPage {
         }
     }
 
-    private void loadSuggestionsForAnswer(Answer answer) {
+
+/** 
+ *
+ * Load suggestions for answer
+ *
+ * @param answer  the answer. 
+ */
+    private void loadSuggestionsForAnswer(Answer answer) { 
+
       	 try {
       	        List<Clarification> list;
       	        if (isPrivilegedRole(user)) {
@@ -1002,20 +1132,45 @@ public class AnswersPage {
       	    }
       }
       
-   private boolean isPrivilegedRole(User user) {
+
+/** 
+ *
+ * Is privileged role
+ *
+ * @param user  the user. 
+ * @return boolean
+ */
+   private boolean isPrivilegedRole(User user) { 
+
        if (user == null || user.getRole() == null) return false;
        String role = user.getRole().name().toLowerCase();
        return role.contains("admin") || role.contains("staff") || role.contains("instructor") || role.contains("teacher") || role.contains("ta");
    }
    
        
-    public static void reloadAnswers() {
+
+/** 
+ *
+ * Reload answers
+ *
+ */
+    public static void reloadAnswers() { 
+
         if (answerTable != null) {
             loadAnswers();
         }
     }
     
-    private void showFlagPopup(ContentType contentType, int itemId) {
+
+/** 
+ *
+ * Show flag popup
+ *
+ * @param contentType  the content type. 
+ * @param itemId  the item identifier. 
+ */
+    private void showFlagPopup(ContentType contentType, int itemId) { 
+
     	Stage popup = new Stage();
 		popup.setTitle("Flag Content");
 		
@@ -1080,14 +1235,30 @@ public class AnswersPage {
 		});
     }
 
-    private int getAnswerCount() {
+
+/** 
+ *
+ * Gets the answer count
+ *
+ * @return the answer count
+ */
+    private int getAnswerCount() { 
+
         List<Answer> allAnswers = answers.readAll();
         return (int) allAnswers.stream()
                 .filter(a -> a.getQuestionId() == question.getQuestionId())
                 .count();
     }
 
-    private void displayAnswerDetails(Answer a) {
+
+/** 
+ *
+ * Display answer details
+ *
+ * @param a  the a. 
+ */
+    private void displayAnswerDetails(Answer a) { 
+
         StringBuilder details = new StringBuilder();
         details.append("Answer ID: ").append(a.getAnswerId()).append("\n");
         details.append("Question ID: ").append(a.getQuestionId()).append("\n");
@@ -1099,7 +1270,17 @@ public class AnswersPage {
         answerDetails.setText(details.toString());
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
+
+/** 
+ *
+ * Show alert
+ *
+ * @param type  the type. 
+ * @param title  the title. 
+ * @param message  the message. 
+ */
+    private void showAlert(Alert.AlertType type, String title, String message) { 
+
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -1107,7 +1288,15 @@ public class AnswersPage {
         alert.showAndWait();
     }
 
-    private void editAnswer(Answer answer) {
+
+/** 
+ *
+ * Edit answer
+ *
+ * @param answer  the answer. 
+ */
+    private void editAnswer(Answer answer) { 
+
         editingAnswer = answer;
         answerInput.setText(answer.getContent());
         markAsSolution.setSelected(answer.isSolution());
@@ -1123,7 +1312,15 @@ public class AnswersPage {
         cancelEditButton.setManaged(true);
     }
 
-    private void updateAnswer(String content) {
+
+/** 
+ *
+ * Update answer
+ *
+ * @param content  the content. 
+ */
+    private void updateAnswer(String content) { 
+
         if (editingAnswer == null) return;
 
         User.Role role = user.getRole();  
@@ -1159,7 +1356,15 @@ public class AnswersPage {
         }
     }
 
-    private void deleteAnswer(Answer answer) {
+
+/** 
+ *
+ * Delete answer
+ *
+ * @param answer  the answer. 
+ */
+    private void deleteAnswer(Answer answer) { 
+
     	boolean isAuthor = answer.getUserId() == user.getId();
     	boolean isPrivileged = user.isPrivileged();
 
@@ -1191,7 +1396,17 @@ public class AnswersPage {
         });
     }
 
-    private boolean canSeeFlag(User user, List<ModerationFlag> flags) {
+
+/** 
+ *
+ * Can see flag
+ *
+ * @param user  the user. 
+ * @param flags  the flags. 
+ * @return boolean
+ */
+    private boolean canSeeFlag(User user, List<ModerationFlag> flags) { 
+
       	 String role = (user.getRole() != null)
                    ? user.getRole().name().toLowerCase()
                    : "";
@@ -1200,7 +1415,14 @@ public class AnswersPage {
       	 return isPrivileged || isFlagger;
    }
     
-    private void clearAnswerForm() {
+
+/** 
+ *
+ * Clear answer form
+ *
+ */
+    private void clearAnswerForm() { 
+
         editingAnswer = null;
         answerInput.clear();
         markAsSolution.setSelected(false);

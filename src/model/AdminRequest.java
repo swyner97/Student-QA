@@ -91,7 +91,8 @@ public class AdminRequest {
          *
          * @return display name string
          */
-        public String getDisplayName() {
+        public String getDisplayName() { 
+
             return displayName;
         }
 
@@ -101,7 +102,8 @@ public class AdminRequest {
          * @return category name string
          */
         @Override
-        public String toString() {
+        public String toString() { 
+
             return displayName;
         }
     }
@@ -117,8 +119,10 @@ public class AdminRequest {
      * @param title short title describing the request
      * @param description detailed explanation of the request
      */
-    public AdminRequest(int requestId, int requestorId, String requestorName,
+
+    public AdminRequest(int requestId, int requestorId, String requestorName, 
                         String category, String title, String description) {
+
         this.requestId = requestId;
         this.requestorId = requestorId;
         this.requestorName = requestorName;
@@ -147,9 +151,11 @@ public class AdminRequest {
      * @param originalRequestId ID of the original request if reopened
      * @param notificationSent whether a notification has been sent
      */
-    public AdminRequest(int requestId, int requestorId, String requestorName,
+
+    public AdminRequest(int requestId, int requestorId, String requestorName, 
                         String category, String title, String description, String status,
                         String timestamp, Integer originalRequestId, boolean notificationSent) {
+
 
         this.requestId = requestId;
         this.requestorId = requestorId;
@@ -177,9 +183,25 @@ public class AdminRequest {
      * @param timestamp timestamp string
      * @param originalRequestId ID of original request if applicable
      */
-    public AdminRequest(int requestId, int requestorId, String requestorName,
+
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param requestId  the request identifier. 
+ * @param requestorId  the requestor identifier. 
+ * @param requestorName  the requestor name. 
+ * @param title  the title. 
+ * @param description  the description. 
+ * @param status  the status. 
+ * @param timestamp  the timestamp. 
+ * @param originalRequestId  the original request identifier. 
+ */
+    public AdminRequest(int requestId, int requestorId, String requestorName, 
                         String title, String description, String status,
                         String timestamp, Integer originalRequestId) {
+
         this(requestId, requestorId, requestorName, "OTHER", title,
              description, status, timestamp, originalRequestId, false);
     }
@@ -189,7 +211,8 @@ public class AdminRequest {
      *
      * @return true if status equals "open"
      */
-    public boolean isOpen() {
+    public boolean isOpen() { 
+
         return "open".equalsIgnoreCase(status);
     }
 
@@ -198,7 +221,8 @@ public class AdminRequest {
      *
      * @return true if status equals "closed"
      */
-    public boolean isClosed() {
+    public boolean isClosed() { 
+
         return "closed".equalsIgnoreCase(status);
     }
 
@@ -207,12 +231,21 @@ public class AdminRequest {
      *
      * @return true if {@code originalRequestId} is not null
      */
-    public boolean isReopened() {
+
+/** 
+ *
+ * Is reopened
+ *
+ * @return boolean
+ */
+    public boolean isReopened() { 
+
         return originalRequestId != null;
     }
 
     /** @return request ID */
-    public int getRequestId() { return requestId; }
+
+    public int getRequestId() { return requestId; } 
 
     /**
      * @param requestId the unique request ID to set
@@ -282,11 +315,13 @@ public class AdminRequest {
      * @param originalRequestId ID of the first request in case of reopening
      */
     public void setOriginalRequestId(Integer originalRequestId) {
+
         this.originalRequestId = originalRequestId;
     }
 
     /** @return list of admin actions */
-    public List<AdminAction> getActions() { return actions; }
+
+    public List<AdminAction> getActions() { return actions; } 
 
     /**
      * @param actions list of admin actions to associate with request
@@ -300,6 +335,7 @@ public class AdminRequest {
      * @param notificationSent true if admin notification was sent
      */
     public void setNotificationSent(boolean notificationSent) {
+
         this.notificationSent = notificationSent;
     }
 
@@ -309,7 +345,8 @@ public class AdminRequest {
      * @return formatted string representation of the request
      */
     @Override
-    public String toString() {
+    public String toString() { 
+
         return String.format("Request #%d: %s [%s - %s]",
                 requestId, title, category, status);
     }

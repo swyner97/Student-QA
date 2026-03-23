@@ -1,62 +1,71 @@
 /**
- * The {@code pages} package contains all the JavaFX-based user interface (UI) components of the application.
+ * Contains all JavaFX UI page classes for the Student QA application.
  * <p>
- * Each class in this package typically corresponds to a specific scene in the application. These pages are composed
- * using JavaFX layout managers, controls, and styles, and they handle event-driven logic for user interactions.
- * 
- * <h2>Key Functional Areas:</h2>
+ * Each class in this package corresponds to a distinct screen or view.
+ * Pages interact with the {@code model}, {@code logic}, and {@code databasePart1}
+ * layers to present data and handle user input. Most pages follow a pattern of
+ * initializing UI controls, loading data on scene display, and defining
+ * event handlers inline.
+ *
+ * <h2>Authentication and Account Management:</h2>
  * <ul>
- *   <li><b>Authentication and Account Management</b>
- *     <ul>
- *       <li>{@literal @link pages.UserLoginPage} – Main login screen for users to access the platform.</li>
- *       <li>{@literal @link pages.SignUpPage} – Allows new users to register and create an account.</li>
- *       <li>{@literal @link pages.SetupAccountPage} – Guides users through initial account setup post-registration.</li>
- *       <li>{@literal @link pages.UpdateAccountPage} – Enables users to edit their profile and credentials.</li>
- *       <li>{@literal @link pages.ResetPasswordPage} – Provides password reset functionality via secure prompts.</li>
- *       <li>{@literal @link pages.SetupLoginSelectionPage}, {@literal @link RoleSelectionPage}, {@literal @link WelcomeLoginPage} – Assist with login method, role selection, and redirection to appropriate entry points.</li>
- *     </ul>
- *   </li>
- *
- *   <li><b>Home Pages</b>
- *     <ul>
- *       <li>{@link pages.AdminHomePage}, {@link pages.InstructorHomePage} – Home dashboards tailored to specific user roles.</li>
- *       <li>{@link pages.FirstPage}, {@link pages.InitialAccessPage} – Landing pages shown after login or first use.</li>
- *     </ul>
- *   </li>
- *
- *   <li><b>Question and Answer Management</b>
- *     <ul>
- *       <li>{@literal @link pages.EditQuestionPage}, {@literal @link pages.EditAnswerPage} – Interfaces for editing submitted QA content.</li>
- *       <li>{@literal @link pages.MyPostsPage}, {@literal @link pages.MyQAPage} – Personal views of questions or answers authored by the user.</li>
- *       <li>{@literal @link pages.SearchPage}, {@literal @link pages.SearchAsPage} – Provide advanced question/answer search features.</li>
- *     </ul>
- *   </li>
- *
- *   <li><b>Reviewing System</b>
- *     <ul>
- *       <li>{@link pages.ReviewPage} – Displays reviews for questions/answers.</li>
- *       <li>{@link pages.EditReviewPage} – Page for editing previously written reviews.</li>
- *       <li>{@link pages.TrustedReviewersPage} – Interface for assigning or managing trusted reviewers.</li>
- *     </ul>
- *   </li>
- *   
- *   <li><b>Messaging System</b>
- *     <ul>
- *       <li>{@link pages.MessagingPage} – Core messaging interface for user communication and clarifications.</li>
- *     </ul>
- *   </li>
- *
- *   <li><b>User Profiles</b>
- *     <ul>
- *       <li>{@link pages.ProfilePage} – View and manage a user's public profile.</li>
- *     </ul>
- *   </li>
+ *   <li>{@link pages.FirstPage} – Displayed on first launch to set up the initial admin account.</li>
+ *   <li>{@link pages.InitialAccessPage} – Entry point for returning users to log in or register.</li>
+ *   <li>{@link pages.WelcomeLoginPage} – Login screen for existing users.</li>
+ *   <li>{@link pages.RoleSelectionPage} – Allows users to select their role on login.</li>
+ *   <li>{@link pages.InvitationPage} – Handles invitation-based account creation.</li>
+ *   <li>{@link pages.ResetPasswordPage} – Provides password reset functionality.</li>
+ *   <li>{@link pages.UpdateAccountPage} – Enables users to edit their profile and credentials.</li>
  * </ul>
  *
- * <p>
- * The classes in this package coordinate directly with the {@code model}, {@code logic}, and {@code databasePart1} layers
- * to fetch data, trigger logic, and reflect user actions. Most pages follow a pattern of initializing UI controls, loading
- * dynamic content on scene display, and defining button or event handlers inline.
- * </p>
+ * <h2>Home and Navigation:</h2>
+ * <ul>
+ *   <li>{@link pages.AdminHomePage} – Home dashboard for administrator users.</li>
+ *   <li>{@link pages.AdminSetupPage} – Initial administrator configuration page.</li>
+ *   <li>{@link pages.InstructorHomePage} – Home dashboard for instructor users.</li>
+ *   <li>{@link pages.StaffPage} – Dashboard for staff users.</li>
+ *   <li>{@link pages.UserQAMenu} – Main Q&amp;A menu for standard users.</li>
+ * </ul>
+ *
+ * <h2>Question and Answer Management:</h2>
+ * <ul>
+ *   <li>{@link pages.AnswersPage} – Displays answers for a selected question.</li>
+ *   <li>{@link pages.EditQuestionPage} – Interface for editing a submitted question.</li>
+ *   <li>{@link pages.EditAnswerPage} – Interface for editing a submitted answer.</li>
+ *   <li>{@link pages.MyPostsPage} – Shows questions and answers authored by the current user.</li>
+ *   <li>{@link pages.MyQAPage} – Personal Q&amp;A view for the current user.</li>
+ *   <li>{@link pages.SearchPage} – Keyword-based search across questions and answers.</li>
+ * </ul>
+ *
+ * <h2>Review System:</h2>
+ * <ul>
+ *   <li>{@link pages.ReviewPage} – Displays reviews for a given answer.</li>
+ *   <li>{@link pages.EditReviewPage} – Interface for editing a previously written review.</li>
+ *   <li>{@link pages.ReviewerProfilePage} – Shows a reviewer's profile and trust rating.</li>
+ *   <li>{@link pages.ReviewerRequestPage} – Allows users to request reviewer status.</li>
+ *   <li>{@link pages.TrustedReviewersPage} – Interface for managing trusted reviewers.</li>
+ *   <li>{@link pages.RankReviewer} – Displays reviewer rankings.</li>
+ * </ul>
+ *
+ * <h2>Messaging and Notifications:</h2>
+ * <ul>
+ *   <li>{@link pages.MessagingPage} – Private messaging interface between users.</li>
+ *   <li>{@link pages.MessagingPageLauncher} – Standalone launcher for the messaging page.</li>
+ *   <li>{@link pages.NotificationsPage} – Displays unread notifications for the current user.</li>
+ * </ul>
+ *
+ * <h2>Administration and Moderation:</h2>
+ * <ul>
+ *   <li>{@link pages.AdminRequestsPage} – Displays and manages user-submitted admin requests.</li>
+ *   <li>{@link pages.RequestsPage} – General requests management page.</li>
+ *   <li>{@link pages.ModerationHandlingPage} – Interface for handling flagged or moderated content.</li>
+ * </ul>
+ *
+ * <h2>Profiles:</h2>
+ * <ul>
+ *   <li>{@link pages.ProfilePage} – Displays and edits the current user's profile.</li>
+ * </ul>
+ *
+ * @author CSE360-Team11 Fall 2025
  */
 package pages;

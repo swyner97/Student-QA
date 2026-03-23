@@ -19,13 +19,40 @@ public class Answer {
     private String timestamp;
     private boolean isSolution;
     
-    public Answer(int answerId, int userId, int questionId, String author, String content) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param answerId  the answer identifier. 
+ * @param userId  the user identifier. 
+ * @param questionId  the question identifier. 
+ * @param author  the author. 
+ * @param content  the content. 
+ */
+    public Answer(int answerId, int userId, int questionId, String author, String content) { 
+
         this(answerId, userId, questionId, author, content, 
              LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), false);
     }
     
-    public Answer(int answerId, int userId, int questionId, String author, String content, 
+
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param answerId  the answer identifier. 
+ * @param userId  the user identifier. 
+ * @param questionId  the question identifier. 
+ * @param author  the author. 
+ * @param content  the content. 
+ * @param timestamp  the timestamp. 
+ * @param isSolution  the is solution. 
+ */
+    public Answer(int answerId, int userId, int questionId, String author, String content,  
                   String timestamp, boolean isSolution) {
+
         this.answerId = answerId;
         this.userId = userId;
         this.questionId = questionId;
@@ -37,7 +64,15 @@ public class Answer {
     
 
     // Getters and Setters
-    public int getAnswerId() { return answerId; }
+
+
+/** 
+ *
+ * Gets the answer identifier
+ *
+ * @return the answer identifier
+ */
+    public int getAnswerId() { return answerId; } 
     public void setAnswerId(int answerId) { this.answerId = answerId; }
     
     public int getQuestionId() { return questionId; }
@@ -60,6 +95,7 @@ public class Answer {
 
     @Override
     public String toString() {
+
         String solutionMarker = isSolution ? " [SOLUTION]" : "";
         return String.format("Answer #%d by %s%s", answerId, author, solutionMarker);
     }

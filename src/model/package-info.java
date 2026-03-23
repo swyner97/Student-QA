@@ -1,34 +1,56 @@
 /**
- * The {@code model} package defines the core data structures and entities used throughout the application.
+ * Contains the core data model classes for the Student QA application.
  * <p>
- * These classes represent the main objects in the system—such as users, questions, answers, messages, and reviews—
- * and serve as the bridge between the database layer and the application logic. 
- * Each class typically encapsulates relevant fields, constructors, and getter/setter methods
- * for managing data integrity and enabling easy interaction with the {@code databasePart1} package.
+ * These classes represent the main domain objects in the system — users, questions,
+ * answers, reviews, clarifications, messages, and administrative structures.
+ * They serve as the bridge between the database layer ({@code databasePart1}) and
+ * the application logic ({@code logic}) and UI ({@code pages}) layers.
+ * Each class encapsulates relevant fields, constructors, and getter/setter methods
+ * for managing data integrity.
  *
- * <h2>Class Summary:</h2>
+ * <h2>User Roles:</h2>
  * <ul>
- *   <li>{@link Admin} – Represents an administrative user with system management privileges.</li>
- *   <li>{@link Answer} – Defines a single answer associated with a specific question.</li>
- *   <li>{@link Answers} – Provides utility or collection-level management for multiple {@code Answer} objects.</li>
- *   <li>{@link Clarification} – Represents a user-submitted clarification or suggestion related to a question or answer.</li>
- *   <li>{@link FollowUpQ} – Represents a follow-up question tied to an existing question for further discussion.</li>
- *   <li>{@link Instructor} – Represents an instructor-type user with permissions for reviewing or managing content.</li>
- *   <li>{@link Messages} – Encapsulates private message data exchanged between users.</li>
- *   <li>{@link NavigationBar} – Defines elements of the application's navigational UI structure.</li>
- *   <li>{@link Question} – Represents an individual question posted by a user, including title, description, and metadata.</li>
- *   <li>{@link Questions} – Handles operations and collections of {@code Question} objects (e.g., loading, sorting, filtering).</li>
- *   <li>{@link Review} – Represents a single review entity, often linked to a user or post evaluation.</li>
- *   <li>{@link Reviewer} – Defines a reviewer-type user who provides feedback or assessments on questions or answers.</li>
- *   <li>{@link Reviews} – Manages collections of {@code Review} objects, such as retrieving or storing multiple reviews.</li>
- *   <li>{@link Student} – Represents a standard student user within the system.</li>
- *   <li>{@link User} – The base user class defining shared attributes and behaviors for all user roles (student, instructor, admin, staff and reviewer.).</li>
+ *   <li>{@link model.User} – Base class defining shared attributes and behaviors for all user roles.</li>
+ *   <li>{@link model.Admin} – Administrative user with system management privileges.</li>
+ *   <li>{@link model.Instructor} – Instructor-type user with content management permissions.</li>
+ *   <li>{@link model.Reviewer} – User who provides reviews and assessments on answers.</li>
+ *   <li>{@link model.Staff} – Staff-type user with elevated access.</li>
+ *   <li>{@link model.Student} – Standard student user.</li>
  * </ul>
  *
- * <p>
- * Together, these classes form the foundation of the system’s domain model, ensuring a consistent and organized representation of data.
- * They are used by higher-level components in the {@code logic} and {@code pages} packages to implement business logic and UI behavior.
- * </p>
+ * <h2>Q&amp;A Entities:</h2>
+ * <ul>
+ *   <li>{@link model.Question} – A question posted by a user, including title, body, and metadata.</li>
+ *   <li>{@link model.Questions} – Manages CRUD operations and collections of {@link model.Question} objects.</li>
+ *   <li>{@link model.Answer} – An answer associated with a specific question.</li>
+ *   <li>{@link model.Answers} – Manages CRUD operations and collections of {@link model.Answer} objects.</li>
+ *   <li>{@link model.Review} – A reviewer's evaluation of an answer.</li>
+ *   <li>{@link model.Reviews} – Manages CRUD operations and collections of {@link model.Review} objects.</li>
+ *   <li>{@link model.Clarification} – A clarification message tied to a question or answer.</li>
+ * </ul>
+ *
+ * <h2>Administrative Structures:</h2>
+ * <ul>
+ *   <li>{@link model.AdminRequest} – A user-submitted request to an administrator.</li>
+ *   <li>{@link model.AdminAction} – Records an administrative action taken on a request.</li>
+ *   <li>{@link model.StaffRequest} – A request submitted to or managed by staff.</li>
+ *   <li>{@link model.ModerationFlag} – Flags content for moderation review.</li>
+ *   <li>{@link model.ModerationNote} – Notes attached to a moderation flag.</li>
+ * </ul>
+ *
+ * <h2>Messaging and Notifications:</h2>
+ * <ul>
+ *   <li>{@link model.Messages} – Encapsulates private message data exchanged between users.</li>
+ *   <li>{@link model.Notification} – Represents a notification sent to a user.</li>
+ * </ul>
+ *
+ * <h2>Other:</h2>
+ * <ul>
+ *   <li>{@link model.ContentType} – Enum defining the type of content (e.g., QUESTION, ANSWER).</li>
+ *   <li>{@link model.Edits} – Tracks edit history for questions or answers.</li>
+ *   <li>{@link model.NavigationBar} – Defines the application's navigational toolbar UI component.</li>
+ * </ul>
+ *
+ * @author CSE360-Team11 Fall 2025
  */
-
 package model;

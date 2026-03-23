@@ -15,15 +15,40 @@ import java.util.*;
 
 import databasePart1.DatabaseHelper;
 
-
+/**
+ * Main entry point for the Student QA JavaFX application.
+ * <p>
+ * This class initializes the database connection, sets up shared application
+ * state via {@link logic.StatusData}, seeds default reviewer accounts and
+ * sample reviews when none exist, and navigates to the appropriate first page.
+ * </p>
+ */
 public class StartApp extends Application {
 
+	/**
+	 * Default constructor for StartApp.
+	 * Instantiated automatically by the JavaFX runtime when launching the application.
+	 */
+	public StartApp() {
+		// Default constructor required by JavaFX Application
+	}
+
+	/** Shared database helper used throughout the application lifecycle. */
 	private static final DatabaseHelper databaseHelper = new DatabaseHelper();
 	
-	public static final int WINDOW_WIDTH = 3000;  
+	/** The width of the main application window in pixels. */
+	public static final int WINDOW_WIDTH = 3000;
+
+	/** The height of the main application window in pixels. */
 	public static final int WINDOW_HEIGHT = 700;  
 	
-	public static void main( String[] args )
+	/**
+	 * Application entry point. Registers a shutdown hook to cleanly close the
+	 * database connection, then launches the JavaFX runtime.
+	 *
+	 * @param args command-line arguments passed to the JavaFX launcher
+	 */
+	public static void main( String[] args ) 
 	{
 		StatusData.databaseHelper = databaseHelper;
 
@@ -36,18 +61,24 @@ public class StartApp extends Application {
 		launch(args);
 	}
 	
+	/**
+	 * Called by the JavaFX runtime after {@link #main(String[])} invokes
+	 * {@code launch()}. Connects to the database, initializes shared model
+	 * objects, seeds reviewer accounts and sample reviews if the database is
+	 * not empty but has no reviewers, and shows either the
+	 * {@link pages.FirstPage} (empty database) or the
+	 * {@link pages.InitialAccessPage} (returning users).
+	 *
+	 * @param primaryStage the primary {@link Stage} provided by the JavaFX runtime
+	 */
 	@Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) { 
+
 		StatusData.primaryStage = primaryStage;
-		//DatabaseHelper databaseHelper = new DatabaseHelper();
         
         try {
             databaseHelper.connectToDatabase(); // Connect to the database
             StatusData.databaseHelper = databaseHelper;
-  
-            //Note: methods to run to alter tables in the database
-            //databaseHelper.addMissingColumns();  //for db user table
-            //databaseHelper.alterNull();
 
             StatusData.questions = new Questions(databaseHelper);
             StatusData.answers = new Answers(databaseHelper);

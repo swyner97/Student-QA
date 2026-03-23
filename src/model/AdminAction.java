@@ -14,8 +14,21 @@ public class AdminAction {
     private String actionDescription;
     private String timestamp;
     
-    public AdminAction(int actionId, int requestId, int adminId, 
+
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param actionId  the action identifier. 
+ * @param requestId  the request identifier. 
+ * @param adminId  the admin identifier. 
+ * @param adminName  the admin name. 
+ * @param actionDescription  the action description. 
+ */
+    public AdminAction(int actionId, int requestId, int adminId,  
                       String adminName, String actionDescription) {
+
         this.actionId = actionId;
         this.requestId = requestId;
         this.adminId = adminId;
@@ -24,8 +37,22 @@ public class AdminAction {
         this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
     
-    public AdminAction(int actionId, int requestId, int adminId, 
+
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param actionId  the action identifier. 
+ * @param requestId  the request identifier. 
+ * @param adminId  the admin identifier. 
+ * @param adminName  the admin name. 
+ * @param actionDescription  the action description. 
+ * @param timestamp  the timestamp. 
+ */
+    public AdminAction(int actionId, int requestId, int adminId,  
                       String adminName, String actionDescription, String timestamp) {
+
         this.actionId = actionId;
         this.requestId = requestId;
         this.adminId = adminId;
@@ -39,7 +66,8 @@ public class AdminAction {
  * getActionId method.
  *
  */
-    public int getActionId() { return actionId; }
+
+    public int getActionId() { return actionId; } 
 /**
  * setActionId method.
  *
@@ -94,6 +122,7 @@ public class AdminAction {
  * @param actionDescription 
  */
     public void setActionDescription(String actionDescription) { 
+
         this.actionDescription = actionDescription; 
     }
 /**
@@ -101,7 +130,8 @@ public class AdminAction {
  *
  */
     
-    public String getTimestamp() { return timestamp; }
+
+    public String getTimestamp() { return timestamp; } 
 /**
  * setTimestamp method.
  *
@@ -115,6 +145,7 @@ public class AdminAction {
  *
  */
     public String toString() {
+
         return String.format("[%s] %s: %s", timestamp, adminName, actionDescription);
     }
 }

@@ -27,7 +27,16 @@ public class AdminRequestsPage {
     
     private AdminRequest selectedRequest;
     
-    public void show(Stage stage, User user) {
+
+/** 
+ *
+ * Show
+ *
+ * @param stage  the stage. 
+ * @param user  the user. 
+ */
+    public void show(Stage stage, User user) { 
+
         this.stage = stage;
         this.user = user;
         
@@ -71,7 +80,15 @@ public class AdminRequestsPage {
         StatusData.setScene(stage, mainPane);
     }
     
-    private VBox createOpenRequestsTab() {
+
+/** 
+ *
+ * Create open requests tab
+ *
+ * @return VBox
+ */
+    private VBox createOpenRequestsTab() { 
+
         VBox mainBox = new VBox(15);
         mainBox.setPadding(new Insets(15));
         
@@ -136,7 +153,15 @@ public class AdminRequestsPage {
         return mainBox;
     }
     
-    private VBox createClosedRequestsTab() {
+
+/** 
+ *
+ * Create closed requests tab
+ *
+ * @return VBox
+ */
+    private VBox createClosedRequestsTab() { 
+
         VBox mainBox = new VBox(15);
         mainBox.setPadding(new Insets(15));
         
@@ -172,7 +197,14 @@ public class AdminRequestsPage {
         return mainBox;
     }
     
-    private void setupOpenRequestsTable() {
+
+/** 
+ *
+ * Setup open requests table
+ *
+ */
+    private void setupOpenRequestsTable() { 
+
         // ID Column
         TableColumn<AdminRequest, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("requestId"));
@@ -188,7 +220,16 @@ public class AdminRequestsPage {
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
         categoryCol.setCellFactory(column -> new TableCell<AdminRequest, String>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+            protected void updateItem(String item, boolean empty) { 
+
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
@@ -264,7 +305,16 @@ public class AdminRequestsPage {
             }
             
             @Override
-            protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+            protected void updateItem(Void item, boolean empty) { 
+
                 super.updateItem(item, empty);
                 if (empty || user.getRole() != User.Role.ADMIN) {
                     setGraphic(null);
@@ -283,7 +333,14 @@ public class AdminRequestsPage {
         });
     }
     
-    private void setupClosedRequestsTable() {
+
+/** 
+ *
+ * Setup closed requests table
+ *
+ */
+    private void setupClosedRequestsTable() { 
+
         TableColumn<AdminRequest, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("requestId"));
         idCol.setPrefWidth(60);
@@ -333,7 +390,16 @@ public class AdminRequestsPage {
             }
             
             @Override
-            protected void updateItem(Void item, boolean empty) {
+
+/** 
+ *
+ * Update item
+ *
+ * @param item  the item. 
+ * @param empty  the empty. 
+ */
+            protected void updateItem(Void item, boolean empty) { 
+
                 super.updateItem(item, empty);
                 
                 if (empty) {
@@ -359,7 +425,15 @@ public class AdminRequestsPage {
         });
     }
     
-    private VBox createDetailsSection() {
+
+/** 
+ *
+ * Create details section
+ *
+ * @return VBox
+ */
+    private VBox createDetailsSection() { 
+
         VBox detailsBox = new VBox(10);
         detailsBox.setPadding(new Insets(10));
         
@@ -384,7 +458,15 @@ public class AdminRequestsPage {
         return detailsBox;
     }
     
-    private VBox createClosedDetailsSection() {
+
+/** 
+ *
+ * Create closed details section
+ *
+ * @return VBox
+ */
+    private VBox createClosedDetailsSection() { 
+
         VBox detailsBox = new VBox(10);
         detailsBox.setPadding(new Insets(10));
         
@@ -426,7 +508,14 @@ public class AdminRequestsPage {
         return detailsBox;
     }
     
-    private void showCreateRequestDialog() {
+
+/** 
+ *
+ * Show create request dialog
+ *
+ */
+    private void showCreateRequestDialog() { 
+
         Stage dialog = new Stage();
         dialog.setTitle("Create Admin Request");
         dialog.initOwner(stage);
@@ -519,7 +608,15 @@ public class AdminRequestsPage {
         dialog.show();
     }
     
-    private void showAddActionDialog(AdminRequest request) {
+
+/** 
+ *
+ * Show add action dialog
+ *
+ * @param request  the request. 
+ */
+    private void showAddActionDialog(AdminRequest request) { 
+
         Stage dialog = new Stage();
         dialog.setTitle("Add Action to Request #" + request.getRequestId());
         dialog.initOwner(stage);
@@ -594,7 +691,15 @@ public class AdminRequestsPage {
         dialog.show();
     }
     
-    private void closeRequest(AdminRequest request) {
+
+/** 
+ *
+ * Close request
+ *
+ * @param request  the request. 
+ */
+    private void closeRequest(AdminRequest request) { 
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Close Request");
         confirm.setHeaderText("Close Request #" + request.getRequestId() + "?");
@@ -616,7 +721,15 @@ public class AdminRequestsPage {
     }
     
     // ⭐ ENHANCED: Reopen dialog now works for both instructors and admins
-    private void showReopenDialog(AdminRequest closedRequest) {
+
+/** 
+ *
+ * Show reopen dialog
+ *
+ * @param closedRequest  the closed request. 
+ */
+    private void showReopenDialog(AdminRequest closedRequest) { 
+
         Stage dialog = new Stage();
         dialog.setTitle("Reopen Request #" + closedRequest.getRequestId());
         dialog.initOwner(stage);
@@ -733,7 +846,15 @@ public class AdminRequestsPage {
         dialog.show();
     }
     
-    private void displayRequestDetails(AdminRequest request) {
+
+/** 
+ *
+ * Display request details
+ *
+ * @param request  the request. 
+ */
+    private void displayRequestDetails(AdminRequest request) { 
+
         StringBuilder details = new StringBuilder();
         details.append("Request ID: #").append(request.getRequestId()).append("\n");
         details.append("Requestor: ").append(request.getRequestorName()).append("\n");
@@ -757,28 +878,67 @@ public class AdminRequestsPage {
         }
     }
     
-    private void displayClosedRequestDetails(AdminRequest request) {
+
+/** 
+ *
+ * Display closed request details
+ *
+ * @param request  the request. 
+ */
+    private void displayClosedRequestDetails(AdminRequest request) { 
+
         // Handled in createClosedDetailsSection()
     }
     
-    private void loadOpenRequests() {
+
+/** 
+ *
+ * Load open requests
+ *
+ */
+    private void loadOpenRequests() { 
+
         List<AdminRequest> requests = StatusData.databaseHelper.loadOpenAdminRequests();
         openRequestsTable.getItems().setAll(requests);
     }
     
-    private void loadClosedRequests() {
+
+/** 
+ *
+ * Load closed requests
+ *
+ */
+    private void loadClosedRequests() { 
+
         List<AdminRequest> requests = StatusData.databaseHelper.loadClosedAdminRequests();
         closedRequestsTable.getItems().setAll(requests);
     }
     
-    private boolean canAccessPage() {
+
+/** 
+ *
+ * Can access page
+ *
+ * @return boolean
+ */
+    private boolean canAccessPage() { 
+
         User.Role role = user.getRole();
         return role == User.Role.INSTRUCTOR || 
                role == User.Role.STAFF || 
                role == User.Role.ADMIN;
     }
     
-    private String getCategoryStyle(String category) {
+
+/** 
+ *
+ * Gets the category style
+ *
+ * @param category  the category. 
+ * @return the category style
+ */
+    private String getCategoryStyle(String category) { 
+
         return switch (category.toUpperCase()) {
             case "ACCOUNT_MANAGEMENT" -> 
                 "-fx-background-color: #e3f2fd; -fx-text-fill: #1976d2; " +
@@ -804,7 +964,17 @@ public class AdminRequestsPage {
         };
     }
     
-    private void showAlert(Alert.AlertType type, String title, String message) {
+
+/** 
+ *
+ * Show alert
+ *
+ * @param type  the type. 
+ * @param title  the title. 
+ * @param message  the message. 
+ */
+    private void showAlert(Alert.AlertType type, String title, String message) { 
+
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);

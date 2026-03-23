@@ -32,9 +32,17 @@ public class DatabaseHelper {
     private Connection connection = null;
     private Statement statement = null;
     
-    public DatabaseHelper() { }
+
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ */
+    public DatabaseHelper() { } 
     
     public DatabaseHelper(Connection connection) {
+
         this.connection = connection;
         try {
             this.statement = connection.createStatement();
@@ -45,7 +53,16 @@ public class DatabaseHelper {
     
     
 
-    public void connectToDatabase() throws SQLException {
+
+/** 
+ *
+ * Connect to database
+ *
+ * @param {  the {.  It is throws 
+ * @throws   SQLException 
+ */
+    public void connectToDatabase() throws SQLException { 
+
         try {
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -62,11 +79,29 @@ public class DatabaseHelper {
         }
     }
     
-    public Connection getConnection() {
+
+/** 
+ *
+ * Gets the connection
+ *
+ * @return the connection
+ */
+    public Connection getConnection() { 
+
         return this.connection;
     }
 
-    public int executeUpdate(String sql) throws SQLException {
+
+/** 
+ *
+ * Execute update
+ *
+ * @param sql  the sql. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int executeUpdate(String sql) throws SQLException { 
+
         try (Statement stmt = connection.createStatement()) {
             return stmt.executeUpdate(sql);
         }
@@ -76,11 +111,21 @@ public class DatabaseHelper {
      * Returns a PreparedStatement from the underlying Connection.
      * Caller is responsible for closing the PreparedStatement when finished.
      */
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
+    public PreparedStatement prepareStatement(String sql) throws SQLException { 
+
         return connection.prepareStatement(sql);
     }
 
-    private void createTables() throws SQLException {
+
+/** 
+ *
+ * Create tables
+ *
+ * @param {  the {.  It is throws 
+ * @throws   SQLException 
+ */
+    private void createTables() throws SQLException { 
+
         String userTable = "CREATE TABLE IF NOT EXISTS cse360users ("
                 + "id INT AUTO_INCREMENT PRIMARY KEY, "
                 + "userName VARCHAR(255) UNIQUE, "
@@ -286,7 +331,17 @@ public class DatabaseHelper {
         statement.execute(editsTable);
     }
 
-    public boolean isDatabaseEmpty() throws SQLException {
+
+/** 
+ *
+ * Is database empty
+ *
+ * @param {  the {.  It is throws 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean isDatabaseEmpty() throws SQLException { 
+
         String query = "SELECT COUNT(*) AS count FROM cse360users";
         try (ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
@@ -296,7 +351,17 @@ public class DatabaseHelper {
         return true;
     }
 
-    public ContentType getContentTypeById(int itemId) throws SQLException {
+
+/** 
+ *
+ * Gets the content type by identifier
+ *
+ * @param itemId  the item identifier. 
+ * @return the content type by identifier
+ * @throws   SQLException 
+ */
+    public ContentType getContentTypeById(int itemId) throws SQLException { 
+
         // for question content
         String questionSQL = "SELECT 1 FROM questions WHERE question_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(questionSQL)) {
@@ -336,7 +401,16 @@ public class DatabaseHelper {
         return ContentType.OTHER;
     }
 
-    public void register(User user) throws SQLException {
+
+/** 
+ *
+ * Register
+ *
+ * @param user  the user. 
+ * @throws   SQLException 
+ */
+    public void register(User user) throws SQLException { 
+
         String insertUser = "INSERT INTO cse360users (userName, password, role, name, email) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(insertUser, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, user.getUserName());
@@ -358,7 +432,19 @@ public class DatabaseHelper {
         }
     }
 
-    public String loginWithOTPcheck(String userName, String enteredPw, String role) throws SQLException {
+
+/** 
+ *
+ * Login with OT pcheck
+ *
+ * @param userName  the user name. 
+ * @param enteredPw  the entered pw. 
+ * @param role  the role. 
+ * @return String
+ * @throws   SQLException 
+ */
+    public String loginWithOTPcheck(String userName, String enteredPw, String role) throws SQLException { 
+
         String query = "SELECT password, temp_password FROM cse360users WHERE userName = ? AND role = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -385,7 +471,16 @@ public class DatabaseHelper {
         return null;
     }
 
-    public boolean doesUserExist(String userName) {
+
+/** 
+ *
+ * Does user exist
+ *
+ * @param userName  the user name. 
+ * @return boolean
+ */
+    public boolean doesUserExist(String userName) { 
+
         String query = "SELECT COUNT(*) FROM cse360users WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -398,7 +493,16 @@ public class DatabaseHelper {
         return false;
     }
 
-    public String getUserRole(String userName) {
+
+/** 
+ *
+ * Gets the user role
+ *
+ * @param userName  the user name. 
+ * @return the user role
+ */
+    public String getUserRole(String userName) { 
+
         String query = "SELECT role FROM cse360users WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -414,7 +518,17 @@ public class DatabaseHelper {
     }
 
     // Updates an existing user in the database
-    public void updateUser(User user, String oldUserName) throws SQLException {
+
+/** 
+ *
+ * Update user
+ *
+ * @param user  the user. 
+ * @param oldUserName  the old user name. 
+ * @throws   SQLException 
+ */
+    public void updateUser(User user, String oldUserName) throws SQLException { 
+
         String updateUser = "UPDATE cse360users SET userName=?, password=?, role=?, name=?, email=? WHERE userName=?";
         try (PreparedStatement pstmt = connection.prepareStatement(updateUser)) {
             pstmt.setString(1, user.getUserName());
@@ -427,7 +541,15 @@ public class DatabaseHelper {
         }
     }
 
-    public void loadUserDetails(User user) {
+
+/** 
+ *
+ * Load user details
+ *
+ * @param user  the user. 
+ */
+    public void loadUserDetails(User user) { 
+
         String query = "SELECT id, name, email, phone, bio FROM cse360users WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, user.getUserName());
@@ -445,7 +567,16 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateFullProfile(User user) throws SQLException {
+
+/** 
+ *
+ * Update full profile
+ *
+ * @param user  the user. 
+ * @throws   SQLException 
+ */
+    public void updateFullProfile(User user) throws SQLException { 
+
         String sql = "UPDATE cse360users SET userName=?, password=?, role=?, name=?, email=?, phone=?, bio=? WHERE id=?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, user.getUserName());
@@ -460,7 +591,20 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateUserProfile(int userId, String name, String email, String phone, String bio) throws SQLException {
+
+/** 
+ *
+ * Update user profile
+ *
+ * @param userId  the user identifier. 
+ * @param name  the name. 
+ * @param email  the email. 
+ * @param phone  the phone. 
+ * @param bio  the bio. 
+ * @throws   SQLException 
+ */
+    public void updateUserProfile(int userId, String name, String email, String phone, String bio) throws SQLException { 
+
         String sql = "UPDATE cse360users SET email = ?, phone = ?, bio = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, email);
@@ -471,7 +615,17 @@ public class DatabaseHelper {
         }
     }
 
-    public Map<String, String> getUserProfile(int userId) throws SQLException {
+
+/** 
+ *
+ * Gets the user profile
+ *
+ * @param userId  the user identifier. 
+ * @return the user profile
+ * @throws   SQLException 
+ */
+    public Map<String, String> getUserProfile(int userId) throws SQLException { 
+
         String sql = "SELECT userName, role, name, email, phone, bio FROM cse360users WHERE id = ?";
         Map<String, String> profile = new HashMap<>();
 
@@ -491,7 +645,16 @@ public class DatabaseHelper {
         return profile;
     }
 
-    public String generateInvitationCode(List<String> selectedRoles) {
+
+/** 
+ *
+ * Generate invitation code
+ *
+ * @param selectedRoles  the selected roles. 
+ * @return String
+ */
+    public String generateInvitationCode(List<String> selectedRoles) { 
+
         List<String> priority = List.of("admin", "instructor", "staff", "reviewer", "student");
 
         // sort roles according to priority
@@ -536,7 +699,17 @@ public class DatabaseHelper {
         return code;
     }
 
-    public List<String> getRolesForInvitationCode(String code) throws SQLException {
+
+/** 
+ *
+ * Gets the roles for invitation code
+ *
+ * @param code  the code. 
+ * @return the roles for invitation code
+ * @throws   SQLException 
+ */
+    public List<String> getRolesForInvitationCode(String code) throws SQLException { 
+
         List<String> roles = new ArrayList<>();
         String query = "SELECT initialRole FROM CodeRoles WHERE code = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -550,7 +723,16 @@ public class DatabaseHelper {
         return roles;
     }
 
-    public boolean validateInvitationCode(String code) {
+
+/** 
+ *
+ * Validate invitation code
+ *
+ * @param code  the code. 
+ * @return boolean
+ */
+    public boolean validateInvitationCode(String code) { 
+
         String query = "SELECT * FROM InvitationCodes WHERE code = ? AND isUsed = FALSE";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, code);
@@ -566,7 +748,15 @@ public class DatabaseHelper {
         return false;
     }
 
-    private void markInvitationCodeAsUsed(String code) {
+
+/** 
+ *
+ * Mark invitation code as used
+ *
+ * @param code  the code. 
+ */
+    private void markInvitationCodeAsUsed(String code) { 
+
         String query = "UPDATE InvitationCodes SET isUsed = TRUE WHERE code = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, code);
@@ -576,7 +766,16 @@ public class DatabaseHelper {
         }
     }
 
-    public String generatePassword(String userName) {
+
+/** 
+ *
+ * Generate password
+ *
+ * @param userName  the user name. 
+ * @return String
+ */
+    public String generatePassword(String userName) { 
+
         String otp = UUID.randomUUID().toString().substring(0, 8);
         String sql = "UPDATE cse360users SET temp_password = ? WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -591,7 +790,17 @@ public class DatabaseHelper {
     }
 
     // add marker to Admin's table for user's who need OTP
-    public boolean requestedPw(String userName, String email) {
+
+/** 
+ *
+ * Requested pw
+ *
+ * @param userName  the user name. 
+ * @param email  the email. 
+ * @return boolean
+ */
+    public boolean requestedPw(String userName, String email) { 
+
         String sql = "UPDATE cse360users SET temp_password = 'PENDING' WHERE userName = ? AND email = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, userName);
@@ -603,7 +812,16 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean validateOTP(String otp) {
+
+/** 
+ *
+ * Validate OTP
+ *
+ * @param otp  the otp. 
+ * @return boolean
+ */
+    public boolean validateOTP(String otp) { 
+
         String query = "SELECT userName FROM cse360users WHERE temp_password = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, otp);
@@ -620,7 +838,15 @@ public class DatabaseHelper {
         return false;
     }
 
-    public void clearTempPassword(String userName) {
+
+/** 
+ *
+ * Clear temp password
+ *
+ * @param userName  the user name. 
+ */
+    public void clearTempPassword(String userName) { 
+
         String query = "UPDATE cse360users SET temp_password = NULL WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -630,7 +856,17 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateUserRole(int id, String newRole) throws SQLException {
+
+/** 
+ *
+ * Update user role
+ *
+ * @param id  the id. 
+ * @param newRole  the new role. 
+ * @throws   SQLException 
+ */
+    public void updateUserRole(int id, String newRole) throws SQLException { 
+
         String query = "UPDATE cse360users SET role = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, newRole);
@@ -639,7 +875,17 @@ public class DatabaseHelper {
         }
     }
 
-    public void addUserRoles(String userName, User.Role role) throws SQLException {
+
+/** 
+ *
+ * Add user roles
+ *
+ * @param userName  the user name. 
+ * @param role  the role. 
+ * @throws   SQLException 
+ */
+    public void addUserRoles(String userName, User.Role role) throws SQLException { 
+
         if (userName == null || userName.trim().isEmpty()) {
             throw new IllegalArgumentException("userName must not be null/empty");
         }
@@ -668,7 +914,17 @@ public class DatabaseHelper {
     }
 
     // where invitation codes will be assigned
-    public void addRoleVIACode(String code, Role role) throws SQLException {
+
+/** 
+ *
+ * Add role VIA code
+ *
+ * @param code  the code. 
+ * @param role  the role. 
+ * @throws   SQLException 
+ */
+    public void addRoleVIACode(String code, Role role) throws SQLException { 
+
         String query = "INSERT INTO CodeRoles (code, initialRole) VALUES (?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, code);
@@ -679,7 +935,17 @@ public class DatabaseHelper {
     }
 
     // list all invitation codes with roles assigned
-    public List<String> allCodeRoles(String code) throws SQLException {
+
+/** 
+ *
+ * All code roles
+ *
+ * @param code  the code. 
+ * @return List<String>
+ * @throws   SQLException 
+ */
+    public List<String> allCodeRoles(String code) throws SQLException { 
+
         List<String> roles = new ArrayList<>();
         String query = "SELECT initialRole FROM CodeRoles WHERE code =?";
 
@@ -694,7 +960,17 @@ public class DatabaseHelper {
         return roles;
     }
 
-    public void deleteUserRole(String userName, Role role) throws SQLException {
+
+/** 
+ *
+ * Delete user role
+ *
+ * @param userName  the user name. 
+ * @param role  the role. 
+ * @throws   SQLException 
+ */
+    public void deleteUserRole(String userName, Role role) throws SQLException { 
+
         String query = "DELETE FROM UserRoles WHERE userName =? and role = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -704,7 +980,17 @@ public class DatabaseHelper {
     }
 
     // List all roles for user
-    public List<String> allUserRoles(String userName) throws SQLException {
+
+/** 
+ *
+ * All user roles
+ *
+ * @param userName  the user name. 
+ * @return List<String>
+ * @throws   SQLException 
+ */
+    public List<String> allUserRoles(String userName) throws SQLException { 
+
         List<String> roles = new ArrayList<>();
         String query = "SELECT role FROM UserRoles WHERE userName =?";
 
@@ -719,7 +1005,17 @@ public class DatabaseHelper {
         return roles;
     }
 
-    public List<User.Role> getAllRolesForUser(String userName) throws SQLException {
+
+/** 
+ *
+ * Gets the all roles for user
+ *
+ * @param userName  the user name. 
+ * @return the all roles for user
+ * @throws   SQLException 
+ */
+    public List<User.Role> getAllRolesForUser(String userName) throws SQLException { 
+
         List<User.Role> roles = new ArrayList<>();
         String sql = "SELECT role FROM UserRoles WHERE userName = ?";
 
@@ -734,7 +1030,15 @@ public class DatabaseHelper {
         return roles;
     }
 
-    public ObservableList<User> getAllUsers() {
+
+/** 
+ *
+ * Gets the all users
+ *
+ * @return the all users
+ */
+    public ObservableList<User> getAllUsers() { 
+
         ObservableList<User> users = FXCollections.observableArrayList();
         String query = "SELECT * FROM cse360users";
         try (Statement stmt = connection.createStatement();
@@ -761,7 +1065,16 @@ public class DatabaseHelper {
         return users;
     }
 
-    public List<User> getAllUsersExcept(int excludeUserId) {
+
+/** 
+ *
+ * Gets the all users except
+ *
+ * @param excludeUserId  the exclude user identifier. 
+ * @return the all users except
+ */
+    public List<User> getAllUsersExcept(int excludeUserId) { 
+
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM cse360users WHERE id != ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -788,7 +1101,16 @@ public class DatabaseHelper {
     }
 
     // where request will be
-    public void reviewerRequest(String userName) throws SQLException {
+
+/** 
+ *
+ * Reviewer request
+ *
+ * @param userName  the user name. 
+ * @throws   SQLException 
+ */
+    public void reviewerRequest(String userName) throws SQLException { 
+
         String query = "INSERT INTO requestReviewerRole (userName) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -797,7 +1119,16 @@ public class DatabaseHelper {
         }
     }
 
-    public void deleteReviewerRequest(String userName) throws SQLException {
+
+/** 
+ *
+ * Delete reviewer request
+ *
+ * @param userName  the user name. 
+ * @throws   SQLException 
+ */
+    public void deleteReviewerRequest(String userName) throws SQLException { 
+
         String query = "DELETE FROM requestReviewerRole WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, userName);
@@ -806,7 +1137,15 @@ public class DatabaseHelper {
         }
     }
 
-    public ObservableList<User> getAllReviewerRequest() {
+
+/** 
+ *
+ * Gets the all reviewer request
+ *
+ * @return the all reviewer request
+ */
+    public ObservableList<User> getAllReviewerRequest() { 
+
         ObservableList<User> users = FXCollections.observableArrayList();
         String query = "SELECT * FROM requestReviewerRole";
         try (Statement stmt = connection.createStatement();
@@ -824,7 +1163,17 @@ public class DatabaseHelper {
         return users;
     }
 
-    public List<User> getUsersByRole(Role role) throws SQLException {
+
+/** 
+ *
+ * Gets the users by role
+ *
+ * @param role  the role. 
+ * @return the users by role
+ * @throws   SQLException 
+ */
+    public List<User> getUsersByRole(Role role) throws SQLException { 
+
         String sql = "SELECT id, userName, password, role, name, email, temp_password "
                 + "FROM cse360users WHERE LOWER(role) = LOWER(?)";
 
@@ -850,7 +1199,17 @@ public class DatabaseHelper {
         return users;
     }
 
-    public User getUserById(int id) throws SQLException {
+
+/** 
+ *
+ * Gets the user by identifier
+ *
+ * @param id  the id. 
+ * @return the user by identifier
+ * @throws   SQLException 
+ */
+    public User getUserById(int id) throws SQLException { 
+
         String sql = "SELECT id, userName, password, role, name, email, temp_password FROM cse360users WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -872,7 +1231,17 @@ public class DatabaseHelper {
     }
 
     // Searches for a User by both name and username
-    public User getUserByName(String name) throws SQLException {
+
+/** 
+ *
+ * Gets the user by name
+ *
+ * @param name  the name. 
+ * @return the user by name
+ * @throws   SQLException 
+ */
+    public User getUserByName(String name) throws SQLException { 
+
         String sql = "SELECT id, userName, password, role, name, email, temp_password "
                 + "FROM cse360users "
                 + "WHERE LOWER(userName) = LOWER(?) "
@@ -908,7 +1277,16 @@ public class DatabaseHelper {
     // Start: Questions and Answers
 
     // Store questions and answers
-    public void insertQuestion(Question question) throws SQLException {
+
+/** 
+ *
+ * Insert question
+ *
+ * @param question  the question. 
+ * @throws   SQLException 
+ */
+    public void insertQuestion(Question question) throws SQLException { 
+
         String sql = "INSERT INTO questions (author, title, description, timestamp, status, follow_up, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, question.getAuthor());
@@ -947,7 +1325,17 @@ public class DatabaseHelper {
         }
     }
 
-    public List<Question> getFollowUps(int parentId) throws SQLException{
+
+/** 
+ *
+ * Gets the follow ups
+ *
+ * @param parentId  the parent identifier. 
+ * @return the follow ups
+ * @throws   SQLException
+ */
+    public List<Question> getFollowUps(int parentId) throws SQLException{ 
+
     	List<Question> followUps = new ArrayList<>();
     	
     	String sql = "SELECT * FROM questions WHERE follow_up = ?";
@@ -974,7 +1362,20 @@ public class DatabaseHelper {
     	return followUps;
     }
     
-    public int insertAnswer(int userId, int questionId, String author, String content) throws SQLException {
+
+/** 
+ *
+ * Insert answer
+ *
+ * @param userId  the user identifier. 
+ * @param questionId  the question identifier. 
+ * @param author  the author. 
+ * @param content  the content. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int insertAnswer(int userId, int questionId, String author, String content) throws SQLException { 
+
         String sql = "INSERT INTO answers (user_id, question_id, author, content, is_solution) VALUES (?, ?, ?, ?, false)";
         PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -992,7 +1393,16 @@ public class DatabaseHelper {
         throw new SQLException("No generated key for answer insert");
     }
     
-    public void insertAnswer(Answer answer) throws SQLException {
+
+/** 
+ *
+ * Insert answer
+ *
+ * @param answer  the answer. 
+ * @throws   SQLException 
+ */
+    public void insertAnswer(Answer answer) throws SQLException { 
+
         String sql = "INSERT INTO answers (user_id, question_id, author, content, timestamp, is_solution) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, answer.getUserId());
@@ -1011,7 +1421,17 @@ public class DatabaseHelper {
         }
     }
 
-    public Question getQuestionById(int questionId) throws SQLException {
+
+/** 
+ *
+ * Gets the question by identifier
+ *
+ * @param questionId  the question identifier. 
+ * @return the question by identifier
+ * @throws   SQLException 
+ */
+    public Question getQuestionById(int questionId) throws SQLException { 
+
         String sql = "SELECT question_id, user_id, author, title, description, timestamp, status, follow_up FROM questions WHERE question_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, questionId);
@@ -1043,7 +1463,17 @@ public class DatabaseHelper {
         return null;
     }
 
-    public Question getQuestionByUser(String userName) throws SQLException {
+
+/** 
+ *
+ * Gets the question by user
+ *
+ * @param userName  the user name. 
+ * @return the question by user
+ * @throws   SQLException 
+ */
+    public Question getQuestionByUser(String userName) throws SQLException { 
+
         String sql = "SELECT question_id, user_id, author, title, description, timestamp, status, follow_up FROM questions WHERE author = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, userName);
@@ -1073,7 +1503,17 @@ public class DatabaseHelper {
         return null;
     }
 
-    public Answer getAnswerById(int answerId) throws SQLException {
+
+/** 
+ *
+ * Gets the answer by identifier
+ *
+ * @param answerId  the answer identifier. 
+ * @return the answer by identifier
+ * @throws   SQLException 
+ */
+    public Answer getAnswerById(int answerId) throws SQLException { 
+
         String sql = "SELECT answer_id, user_id, question_id, author, content, timestamp, is_solution FROM answers WHERE answer_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, answerId);
@@ -1097,7 +1537,15 @@ public class DatabaseHelper {
         return null;
     }
 
-    public List<Question> loadAllQs() {
+
+/** 
+ *
+ * Load all qs
+ *
+ * @return List<Question>
+ */
+    public List<Question> loadAllQs() { 
+
 
         List<Question> questions = new ArrayList<>();
         String sql = "SELECT * FROM questions";
@@ -1140,7 +1588,15 @@ public class DatabaseHelper {
     }
 
     // Load all answers
-    public List<Answer> loadAllAnswers() {
+
+/** 
+ *
+ * Load all answers
+ *
+ * @return List<Answer>
+ */
+    public List<Answer> loadAllAnswers() { 
+
         List<Answer> answers = new ArrayList<>();
         String sql = "SELECT * FROM answers";
         try (PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -1167,7 +1623,16 @@ public class DatabaseHelper {
     }
 
     // Load answers for a question
-    public List<Answer> loadAnswersForQs(int questionId) {
+
+/** 
+ *
+ * Load answers for qs
+ *
+ * @param questionId  the question identifier. 
+ * @return List<Answer>
+ */
+    public List<Answer> loadAnswersForQs(int questionId) { 
+
         List<Answer> answers = new ArrayList<>();
         String sql = "SELECT * FROM answers WHERE question_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -1193,7 +1658,18 @@ public class DatabaseHelper {
         return answers;
     }
 
-    public List<Question> searchQuestions(String keyword, String author, Boolean resolved) {
+
+/** 
+ *
+ * Search questions
+ *
+ * @param keyword  the keyword. 
+ * @param author  the author. 
+ * @param resolved  the resolved. 
+ * @return List<Question>
+ */
+    public List<Question> searchQuestions(String keyword, String author, Boolean resolved) { 
+
         List<Question> result = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM questions WHERE 1=1");
 
@@ -1250,7 +1726,18 @@ public class DatabaseHelper {
     }
     
     // Search answers
-    public List<Answer> searchAnswers(String keyword, String author, Boolean isSolution) {
+
+/** 
+ *
+ * Search answers
+ *
+ * @param keyword  the keyword. 
+ * @param author  the author. 
+ * @param isSolution  the is solution. 
+ * @return List<Answer>
+ */
+    public List<Answer> searchAnswers(String keyword, String author, Boolean isSolution) { 
+
         List<Answer> results = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM answers WHERE 1=1");
 
@@ -1300,7 +1787,16 @@ public class DatabaseHelper {
         return results;
     }
     // Update existing question (title, description, status)
-    public void updateQuestion(Question question) throws SQLException {
+
+/** 
+ *
+ * Update question
+ *
+ * @param question  the question. 
+ * @throws   SQLException 
+ */
+    public void updateQuestion(Question question) throws SQLException { 
+
         String sql = "UPDATE questions SET title = ?, description = ?, status = ?, timestamp = ? WHERE question_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, question.getTitle());
@@ -1329,7 +1825,16 @@ public class DatabaseHelper {
         }
     }
     // Delete a question by ID
-    public void deleteQuestion(int questionId) throws SQLException {
+
+/** 
+ *
+ * Delete question
+ *
+ * @param questionId  the question identifier. 
+ * @throws   SQLException 
+ */
+    public void deleteQuestion(int questionId) throws SQLException { 
+
         // First delete all answers associated with this question
         String deleteAnswers = "DELETE FROM answers WHERE question_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(deleteAnswers)) {
@@ -1351,7 +1856,16 @@ public class DatabaseHelper {
     }
 
     // Delete an answer by ID
-    public void deleteAnswer(int answerId) throws SQLException {
+
+/** 
+ *
+ * Delete answer
+ *
+ * @param answerId  the answer identifier. 
+ * @throws   SQLException 
+ */
+    public void deleteAnswer(int answerId) throws SQLException { 
+
         String deleteAnswer = "DELETE FROM answers WHERE answer_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(deleteAnswer)) {
             pstmt.setInt(1, answerId);
@@ -1365,7 +1879,16 @@ public class DatabaseHelper {
     }
 
     // Update an existing answer in the database
-    public void updateAnswer(Answer answer) throws SQLException {
+
+/** 
+ *
+ * Update answer
+ *
+ * @param answer  the answer. 
+ * @throws   SQLException 
+ */
+    public void updateAnswer(Answer answer) throws SQLException { 
+
         String sql = "UPDATE answers SET content = ?, is_solution = ? WHERE answer_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -1383,7 +1906,16 @@ public class DatabaseHelper {
         }
     }
 
-    public List<Question> getQuestionsByUser(String username) {
+
+/** 
+ *
+ * Gets the questions by user
+ *
+ * @param username  the username. 
+ * @return the questions by user
+ */
+    public List<Question> getQuestionsByUser(String username) { 
+
         List<Question> questionsByUser = new ArrayList<>();
         String sql = "SELECT * FROM questions WHERE LOWER(author) = ?";
 
@@ -1419,7 +1951,17 @@ public class DatabaseHelper {
         return questionsByUser;
     }
 
-    public void updateQuestionResolved(int questionId, boolean resolved) throws SQLException {
+
+/** 
+ *
+ * Update question resolved
+ *
+ * @param questionId  the question identifier. 
+ * @param resolved  the resolved. 
+ * @throws   SQLException 
+ */
+    public void updateQuestionResolved(int questionId, boolean resolved) throws SQLException { 
+
         String statusStr = resolved ? "Resolved" : "Unresolved";  // or "Closed"/"open"
         String sql = "UPDATE questions SET status = ? WHERE question_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1430,7 +1972,18 @@ public class DatabaseHelper {
     }
     
     
-    public int updateAnswerSolutionStatus(int answerId, boolean isSolution) throws SQLException {
+
+/** 
+ *
+ * Update answer solution status
+ *
+ * @param answerId  the answer identifier. 
+ * @param isSolution  the is solution. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int updateAnswerSolutionStatus(int answerId, boolean isSolution) throws SQLException { 
+
         String sql = "UPDATE answers SET is_solution = ? WHERE answer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setBoolean(1, isSolution);
@@ -1440,7 +1993,16 @@ public class DatabaseHelper {
     }
   
     
-    public List<Answer> getAnswersByUser(String username) {
+
+/** 
+ *
+ * Gets the answers by user
+ *
+ * @param username  the username. 
+ * @return the answers by user
+ */
+    public List<Answer> getAnswersByUser(String username) { 
+
         List<Answer> answersByUser = new ArrayList<>();
         String sql = "SELECT * FROM answers WHERE LOWER(author) = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -1465,7 +2027,17 @@ public class DatabaseHelper {
         }
         return answersByUser;
     }
-    public List<Answer> getAnswersByQuestionId(int questionId) throws SQLException {
+
+/** 
+ *
+ * Gets the answers by question identifier
+ *
+ * @param questionId  the question identifier. 
+ * @return the answers by question identifier
+ * @throws   SQLException 
+ */
+    public List<Answer> getAnswersByQuestionId(int questionId) throws SQLException { 
+
         List<Answer> answers = new ArrayList<>();
 
         String sql = "SELECT * FROM answers WHERE question_id = ?";
@@ -1499,7 +2071,16 @@ public class DatabaseHelper {
     // Begin: Clarification functions
 
     // Insert Clarification
-    public void insertClarification(Clarification clarification) throws SQLException {
+
+/** 
+ *
+ * Insert clarification
+ *
+ * @param clarification  the clarification. 
+ * @throws   SQLException 
+ */
+    public void insertClarification(Clarification clarification) throws SQLException { 
+
         String sql = "INSERT INTO clarifications (question_id, answer_id, author_id, recipient_id, author, content, timestamp, is_read, is_public) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             if (clarification.getQuestionId() > 0) {
@@ -1528,7 +2109,18 @@ public class DatabaseHelper {
     
 
     // Load clarifications logic
-    public List<Clarification> loadClarifications(String type, int id) throws SQLException {
+
+/** 
+ *
+ * Load clarifications
+ *
+ * @param type  the type. 
+ * @param id  the id. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadClarifications(String type, int id) throws SQLException { 
+
         List<Clarification> clarifications = new ArrayList<>();
         String sql;
 
@@ -1565,7 +2157,18 @@ public class DatabaseHelper {
         return clarifications;
     }
     
-    public List<Clarification> loadClarificationsForQuestionAndUser(Question question, User user) throws SQLException {
+
+/** 
+ *
+ * Load clarifications for question and user
+ *
+ * @param question  the question. 
+ * @param user  the user. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadClarificationsForQuestionAndUser(Question question, User user) throws SQLException { 
+
         String sql;
         boolean isPrivileged = user.getRole() != null &&
              (user.getRole().name().equalsIgnoreCase("ADMIN")
@@ -1591,7 +2194,17 @@ public class DatabaseHelper {
         }
     }
 
-    private Clarification extractClarification(ResultSet rs) throws SQLException {
+
+/** 
+ *
+ * Extract clarification
+ *
+ * @param rs  the rs. 
+ * @return Clarification
+ * @throws   SQLException 
+ */
+    private Clarification extractClarification(ResultSet rs) throws SQLException { 
+
         Clarification c = new Clarification(
             rs.getInt("clarification_id"),
             rs.getInt("question_id"),
@@ -1624,16 +2237,46 @@ public class DatabaseHelper {
     }
     
     // Load clarifications for question
-    public List<Clarification> loadClarificationsforQ(int questionId) throws SQLException {
+
+/** 
+ *
+ * Load clarificationsfor Q
+ *
+ * @param questionId  the question identifier. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadClarificationsforQ(int questionId) throws SQLException { 
+
         return loadClarifications("question_id", questionId);
     }
 
     // Load clarifications for answer
-    public List<Clarification> loadClarificationsforA(int answerId) throws SQLException {
+
+/** 
+ *
+ * Load clarificationsfor A
+ *
+ * @param answerId  the answer identifier. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadClarificationsforA(int answerId) throws SQLException { 
+
         return loadClarifications("answer_id", answerId);
     }
     
-    public List<Clarification> loadAllSuggestionsForUser(int recipientId) throws SQLException {
+
+/** 
+ *
+ * Load all suggestions for user
+ *
+ * @param recipientId  the recipient identifier. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadAllSuggestionsForUser(int recipientId) throws SQLException { 
+
         String sql = "SELECT * FROM clarifications WHERE recipient_id = ?";
         List<Clarification> suggestions = new ArrayList<>();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -1647,7 +2290,17 @@ public class DatabaseHelper {
         return suggestions;
     }
     
-    public List<Clarification> loadPrivateSuggestionsForUser(int recipientId) throws SQLException {
+
+/** 
+ *
+ * Load private suggestions for user
+ *
+ * @param recipientId  the recipient identifier. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadPrivateSuggestionsForUser(int recipientId) throws SQLException { 
+
         String sql = "SELECT * FROM clarifications WHERE recipient_id = ? AND is_public = FALSE";
         List<Clarification> suggestions = new ArrayList<>();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -1661,7 +2314,16 @@ public class DatabaseHelper {
         return suggestions;
     }
     
-    public void makeClarificationPublic(int clarificationId) throws SQLException {
+
+/** 
+ *
+ * Make clarification public
+ *
+ * @param clarificationId  the clarification identifier. 
+ * @throws   SQLException 
+ */
+    public void makeClarificationPublic(int clarificationId) throws SQLException { 
+
         String sql = "UPDATE clarifications SET is_public = TRUE WHERE clarification_id=?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, clarificationId);
@@ -1669,11 +2331,28 @@ public class DatabaseHelper {
         }
     }
 
-    public List<Clarification> loadClarificationsForUser(int recipientId) throws SQLException {
+
+/** 
+ *
+ * Load clarifications for user
+ *
+ * @param recipientId  the recipient identifier. 
+ * @return List<Clarification>
+ * @throws   SQLException 
+ */
+    public List<Clarification> loadClarificationsForUser(int recipientId) throws SQLException { 
+
         return loadClarifications("recipient_id", recipientId);
     }
     
-    public void closeConnection() {
+
+/** 
+ *
+ * Close connection
+ *
+ */
+    public void closeConnection() { 
+
         try {
             if (statement != null) statement.close();
         } catch (SQLException se) {
@@ -1686,7 +2365,16 @@ public class DatabaseHelper {
         }
     }
 
-    public void markClarificationAsRead(int clarificationId) throws SQLException {
+
+/** 
+ *
+ * Mark clarification as read
+ *
+ * @param clarificationId  the clarification identifier. 
+ * @throws   SQLException 
+ */
+    public void markClarificationAsRead(int clarificationId) throws SQLException { 
+
         String sql = "UPDATE clarifications SET is_read = TRUE WHERE clarification_id=?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, clarificationId);
@@ -1700,7 +2388,15 @@ public class DatabaseHelper {
 
     // Begin: Private Message functions
 
-    public void sendMessage(Messages msg) {
+
+/** 
+ *
+ * Send message
+ *
+ * @param msg  the message. 
+ */
+    public void sendMessage(Messages msg) { 
+
 
         if (msg.getMessage() == null || msg.getMessage().trim().isEmpty()) {
             System.out.println("Cannot send empty message.");
@@ -1728,7 +2424,16 @@ public class DatabaseHelper {
         }
     }
 
-    public List<Messages> getMessagesForUser(int userId) {
+
+/** 
+ *
+ * Gets the messages for user
+ *
+ * @param userId  the user identifier. 
+ * @return the messages for user
+ */
+    public List<Messages> getMessagesForUser(int userId) { 
+
 
         List<Messages> messages = new ArrayList<>();
         try {
@@ -1763,7 +2468,16 @@ public class DatabaseHelper {
         return messages;
     }
 
-    public List<Messages> getSentMessagesForUser(int userId) {
+
+/** 
+ *
+ * Gets the sent messages for user
+ *
+ * @param userId  the user identifier. 
+ * @return the sent messages for user
+ */
+    public List<Messages> getSentMessagesForUser(int userId) { 
+
 
         List<Messages> sentMessages = new ArrayList<>();
         try {
@@ -1797,7 +2511,17 @@ public class DatabaseHelper {
         return sentMessages;
     }
 
-    public List<Messages> getMessagesBetweenUsers(int user1, int user2) {
+
+/** 
+ *
+ * Gets the messages between users
+ *
+ * @param user1  the user1. 
+ * @param user2  the user2. 
+ * @return the messages between users
+ */
+    public List<Messages> getMessagesBetweenUsers(int user1, int user2) { 
+
         List<Messages> messages = new ArrayList<>();
 
         try {
@@ -1829,7 +2553,16 @@ public class DatabaseHelper {
         return messages;
     }
 
-    public void markMessagesAsRead(int messageId) throws SQLException {
+
+/** 
+ *
+ * Mark messages as read
+ *
+ * @param messageId  the message identifier. 
+ * @throws   SQLException 
+ */
+    public void markMessagesAsRead(int messageId) throws SQLException { 
+
         String sql = "UPDATE privateMessages SET is_read = TRUE WHERE id=?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, messageId);
@@ -1843,7 +2576,18 @@ public class DatabaseHelper {
 
     // Begin: Trusted Reviewer Functions
 
-    public boolean addTrustedReviewer(int studentId, int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Add trusted reviewer
+ *
+ * @param studentId  the student identifier. 
+ * @param reviewerId  the reviewer identifier. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean addTrustedReviewer(int studentId, int reviewerId) throws SQLException { 
+
         String sql = "MERGE INTO trustedReviewers (student_id, reviewer_id) "
                 + "KEY (student_id, reviewer_id) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1853,7 +2597,18 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean removeTrustedReviewer(int studentId, int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Remove trusted reviewer
+ *
+ * @param studentId  the student identifier. 
+ * @param reviewerId  the reviewer identifier. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean removeTrustedReviewer(int studentId, int reviewerId) throws SQLException { 
+
         String sql = "DELETE FROM trustedReviewers WHERE student_id=? AND reviewer_id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, studentId);
@@ -1862,7 +2617,17 @@ public class DatabaseHelper {
         }
     }
 
-    public List<Integer> getTrustedReviewerIds(int studentId) throws SQLException {
+
+/** 
+ *
+ * Gets the trusted reviewer ids
+ *
+ * @param studentId  the student identifier. 
+ * @return the trusted reviewer ids
+ * @throws   SQLException 
+ */
+    public List<Integer> getTrustedReviewerIds(int studentId) throws SQLException { 
+
         String sql = "SELECT reviewer_id FROM trustedReviewers WHERE student_id=?";
         List<Integer> ids = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1874,7 +2639,18 @@ public class DatabaseHelper {
         return ids;
     }
 
-    public boolean isTrusted(int studentId, int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Is trusted
+ *
+ * @param studentId  the student identifier. 
+ * @param reviewerId  the reviewer identifier. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean isTrusted(int studentId, int reviewerId) throws SQLException { 
+
         String sql = "SELECT 1 FROM trustedReviewers WHERE student_id=? AND reviewer_id=? LIMIT 1";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, studentId);
@@ -1885,7 +2661,18 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateTrustedReviewerRating(int studentId, int reviewerId, int rating) throws SQLException {
+
+/** 
+ *
+ * Update trusted reviewer rating
+ *
+ * @param studentId  the student identifier. 
+ * @param reviewerId  the reviewer identifier. 
+ * @param rating  the rating. 
+ * @throws   SQLException 
+ */
+    public void updateTrustedReviewerRating(int studentId, int reviewerId, int rating) throws SQLException { 
+
         String sql = "UPDATE trustedReviewers SET rating = ? WHERE student_id = ? AND reviewer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, rating);
@@ -1895,7 +2682,17 @@ public class DatabaseHelper {
         }
     }
 
-    public Map<Integer, Integer> getTrustedReviewerRatings(int studentId) throws SQLException {
+
+/** 
+ *
+ * Gets the trusted reviewer ratings
+ *
+ * @param studentId  the student identifier. 
+ * @return the trusted reviewer ratings
+ * @throws   SQLException 
+ */
+    public Map<Integer, Integer> getTrustedReviewerRatings(int studentId) throws SQLException { 
+
         String sql = "SELECT reviewer_id, rating FROM trustedReviewers WHERE student_id=?";
         Map<Integer, Integer> map = new HashMap<>();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1915,7 +2712,15 @@ public class DatabaseHelper {
 
     // Reviews
 
-    public List<Review> loadAllReviews() {
+
+/** 
+ *
+ * Load all reviews
+ *
+ * @return List<Review>
+ */
+    public List<Review> loadAllReviews() { 
+
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM reviews";
         try (PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -1942,7 +2747,8 @@ public class DatabaseHelper {
      * Insert a Review (no rating column).
      * Upon success, the generated review_id is set into the Review object (if Review has a setter).
      */
-    public void insertReview(Review review) throws SQLException {
+    public void insertReview(Review review) throws SQLException { 
+
         String sql = "INSERT INTO reviews (user_id, answer_id, author, content, timestamp) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             if (review.getUserId() > 0) {
@@ -1987,7 +2793,17 @@ public class DatabaseHelper {
     }
 
     // Load reviews for a specific answer
-    public List<Review> loadReviewsForAnswer(int answerId) throws SQLException {
+
+/** 
+ *
+ * Load reviews for answer
+ *
+ * @param answerId  the answer identifier. 
+ * @return List<Review>
+ * @throws   SQLException 
+ */
+    public List<Review> loadReviewsForAnswer(int answerId) throws SQLException { 
+
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM reviews WHERE answer_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -2009,7 +2825,16 @@ public class DatabaseHelper {
     }
 
     // Update an existing review
-    public void updateReview(Review review) throws SQLException {
+
+/** 
+ *
+ * Update review
+ *
+ * @param review  the review. 
+ * @throws   SQLException 
+ */
+    public void updateReview(Review review) throws SQLException { 
+
         String sql = "UPDATE reviews SET content = ?, timestamp = ? WHERE review_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, review.getContent());
@@ -2030,7 +2855,16 @@ public class DatabaseHelper {
     }
 
     // Delete a review by ID
-    public void deleteReview(int reviewId) throws SQLException {
+
+/** 
+ *
+ * Delete review
+ *
+ * @param reviewId  the review identifier. 
+ * @throws   SQLException 
+ */
+    public void deleteReview(int reviewId) throws SQLException { 
+
         String sql = "DELETE FROM reviews WHERE review_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, reviewId);
@@ -2043,7 +2877,17 @@ public class DatabaseHelper {
         }
     }
 
-    public List<Review> getReviewsByReviewer(int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Gets the reviews by reviewer
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @return the reviews by reviewer
+ * @throws   SQLException 
+ */
+    public List<Review> getReviewsByReviewer(int reviewerId) throws SQLException { 
+
         String sql = "SELECT review_id, user_id, answer_id, author, content, timestamp FROM reviews WHERE user_id = ?";
 
         List<Review> reviews = new ArrayList<>();
@@ -2065,7 +2909,17 @@ public class DatabaseHelper {
         return reviews;
     }
     
-    public String getInstructorScoringMethod() throws SQLException {
+
+/** 
+ *
+ * Gets the instructor scoring method
+ *
+ * @param {  the {.  It is throws 
+ * @return the instructor scoring method
+ * @throws   SQLException 
+ */
+    public String getInstructorScoringMethod() throws SQLException { 
+
         String sql = "SELECT scoring_method FROM instructorSettings LIMIT 1";
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -2076,7 +2930,16 @@ public class DatabaseHelper {
         return "HIGHEST_SUM"; // default
     }
 
-    public void updateInstructorScoringMethod(String method) throws SQLException {
+
+/** 
+ *
+ * Update instructor scoring method
+ *
+ * @param method  the method. 
+ * @throws   SQLException 
+ */
+    public void updateInstructorScoringMethod(String method) throws SQLException { 
+
         String sql = "MERGE INTO instructorSettings (id, scoring_method) KEY(id) VALUES (1, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, method);
@@ -2085,7 +2948,18 @@ public class DatabaseHelper {
     }
     
     
-    public void updateReviewerScore(int reviewerId, int score, String method) throws SQLException {
+
+/** 
+ *
+ * Update reviewer score
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @param score  the score. 
+ * @param method  the method. 
+ * @throws   SQLException 
+ */
+    public void updateReviewerScore(int reviewerId, int score, String method) throws SQLException { 
+
         String sql = "MERGE INTO reviewerScoreCard (reviewer_id, score, scoring_method) KEY(reviewer_id) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, reviewerId);
@@ -2104,7 +2978,17 @@ public class DatabaseHelper {
     	return sumScore; } } } return 0; // if no ratings }
     }
     
-    public int calculateAverageScore(int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Calculate average score
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int calculateAverageScore(int reviewerId) throws SQLException { 
+
         String sql = "SELECT AVG(rating) AS avg_score FROM allReviewerRatings WHERE reviewer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, reviewerId);
@@ -2119,7 +3003,17 @@ public class DatabaseHelper {
         return 0; // if no ratings
     }
 
-    public int calculateReviewerScore(int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Calculate reviewer score
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int calculateReviewerScore(int reviewerId) throws SQLException { 
+
         String method = getInstructorScoringMethod();
         switch (method.toUpperCase()) {
             case "AVERAGE":
@@ -2134,7 +3028,8 @@ public class DatabaseHelper {
     /**
      * Retrieves average reviewer scores for all reviewers based on the current user's ratings.
      */
-    public List<TrustedReviewerRow> getReviewerScores() throws SQLException {
+    public List<TrustedReviewerRow> getReviewerScores() throws SQLException { 
+
         String sql = "SELECT reviewer_id, AVG(rating) AS score "
                    + "FROM trustedReviewers "
                    + "GROUP BY reviewer_id "
@@ -2160,7 +3055,8 @@ public class DatabaseHelper {
     /**
      * Retrieves total scores for all reviewers across all students.
      */
-    public List<TrustedReviewerRow> getAllReviewerScores() throws SQLException {
+    public List<TrustedReviewerRow> getAllReviewerScores() throws SQLException { 
+
         String sql = "SELECT u.id AS reviewer_id, u.userName, u.name, "
                    + "COALESCE(SUM(a.rating), 0) AS total_score "
                    + "FROM cse360users u "
@@ -2187,7 +3083,19 @@ public class DatabaseHelper {
         return scores;
     }
 
-    public boolean addReviewerScore(int reviewerId, int studentId, double rating) throws SQLException {
+
+/** 
+ *
+ * Add reviewer score
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @param studentId  the student identifier. 
+ * @param rating  the rating. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean addReviewerScore(int reviewerId, int studentId, double rating) throws SQLException { 
+
         String sql = "MERGE INTO allReviewerRatings KEY(reviewer_id, student_id) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, reviewerId);
@@ -2197,7 +3105,17 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateAllReviewerRating(int reviewerId, double rating) throws SQLException {
+
+/** 
+ *
+ * Update all reviewer rating
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @param rating  the rating. 
+ * @throws   SQLException 
+ */
+    public void updateAllReviewerRating(int reviewerId, double rating) throws SQLException { 
+
         String sql = "UPDATE allReviewerRatings SET avg_rating = ? WHERE reviewer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDouble(1, rating);
@@ -2211,7 +3129,20 @@ public class DatabaseHelper {
 
     // Moderation Flags / Notes
 
-    public int insertModerationFlag(String itemType, int itemId, int staffId, String reason) throws SQLException {
+
+/** 
+ *
+ * Insert moderation flag
+ *
+ * @param itemType  the item type. 
+ * @param itemId  the item identifier. 
+ * @param staffId  the staff identifier. 
+ * @param reason  the reason. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int insertModerationFlag(String itemType, int itemId, int staffId, String reason) throws SQLException { 
+
         String sql = "INSERT INTO moderationFlags (item_type, item_id, staff_id, reason) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemType);
@@ -2229,11 +3160,34 @@ public class DatabaseHelper {
         return -1;
     }
 
-    public int insertModerationFlag(ContentType itemType, int itemId, int staffId, String reason) throws SQLException {
+
+/** 
+ *
+ * Insert moderation flag
+ *
+ * @param itemType  the item type. 
+ * @param itemId  the item identifier. 
+ * @param staffId  the staff identifier. 
+ * @param reason  the reason. 
+ * @return int
+ * @throws   SQLException 
+ */
+    public int insertModerationFlag(ContentType itemType, int itemId, int staffId, String reason) throws SQLException { 
+
         return insertModerationFlag(itemType.toDatabaseString(), itemId, staffId, reason);
     }
 
-    public List<ModerationFlag> loadAllModerationFlags() throws SQLException {
+
+/** 
+ *
+ * Load all moderation flags
+ *
+ * @param {  the {.  It is throws 
+ * @return List<ModerationFlag>
+ * @throws   SQLException 
+ */
+    public List<ModerationFlag> loadAllModerationFlags() throws SQLException { 
+
         List<ModerationFlag> flags = new ArrayList<>();
         String sql = "SELECT * FROM moderationFlags ORDER BY created_at DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql);
@@ -2253,7 +3207,17 @@ public class DatabaseHelper {
         return flags;
     }
 
-    public List<ModerationFlag> loadModerationFlagsByStatus(String status) throws SQLException {
+
+/** 
+ *
+ * Load moderation flags by status
+ *
+ * @param status  the status. 
+ * @return List<ModerationFlag>
+ * @throws   SQLException 
+ */
+    public List<ModerationFlag> loadModerationFlagsByStatus(String status) throws SQLException { 
+
         List<ModerationFlag> flags = new ArrayList<>();
         String sql = "SELECT * FROM moderationFlags WHERE status = ? ORDER BY created_at DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -2275,7 +3239,17 @@ public class DatabaseHelper {
         return flags;
     }
 
-    public void updateModerationFlagStatus(int flagId, String status) throws SQLException {
+
+/** 
+ *
+ * Update moderation flag status
+ *
+ * @param flagId  the flag identifier. 
+ * @param status  the status. 
+ * @throws   SQLException 
+ */
+    public void updateModerationFlagStatus(int flagId, String status) throws SQLException { 
+
         String sql = "UPDATE moderationFlags SET status = ? WHERE flag_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, status);
@@ -2284,7 +3258,17 @@ public class DatabaseHelper {
         }
     }
 
-    public String retrieveFlaggedContent(String itemType, int itemId) {
+
+/** 
+ *
+ * Retrieve flagged content
+ *
+ * @param itemType  the item type. 
+ * @param itemId  the item identifier. 
+ * @return String
+ */
+    public String retrieveFlaggedContent(String itemType, int itemId) { 
+
         String sql = switch (itemType.toLowerCase()) {
             case "question" -> "SELECT description FROM questions WHERE question_id = ?";
             case "answer" -> "SELECT content FROM answers WHERE answer_id = ?";
@@ -2310,7 +3294,17 @@ public class DatabaseHelper {
         return "No content found.";
     }
 
-    public User retrieveFlaggedUser(String itemType, int itemId) {
+
+/** 
+ *
+ * Retrieve flagged user
+ *
+ * @param itemType  the item type. 
+ * @param itemId  the item identifier. 
+ * @return User
+ */
+    public User retrieveFlaggedUser(String itemType, int itemId) { 
+
         String sql = switch (itemType.toLowerCase()) {
             case "question" -> "SELECT user_id FROM questions WHERE question_id = ?";
             case "answer" -> "SELECT user_id FROM answers WHERE answer_id = ?";
@@ -2364,7 +3358,18 @@ public class DatabaseHelper {
         return null;
     }
 
-    public void insertModerationNote(int flagId, int staffId, String noteText) throws SQLException {
+
+/** 
+ *
+ * Insert moderation note
+ *
+ * @param flagId  the flag identifier. 
+ * @param staffId  the staff identifier. 
+ * @param noteText  the note text. 
+ * @throws   SQLException 
+ */
+    public void insertModerationNote(int flagId, int staffId, String noteText) throws SQLException { 
+
         String sql = "INSERT INTO moderationNotes (flag_id, staff_id, note_text) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, flagId);
@@ -2374,7 +3379,17 @@ public class DatabaseHelper {
         }
     }
 
-    public List<ModerationNote> loadModerationNotesForFlag(int flagId) throws SQLException {
+
+/** 
+ *
+ * Load moderation notes for flag
+ *
+ * @param flagId  the flag identifier. 
+ * @return List<ModerationNote>
+ * @throws   SQLException 
+ */
+    public List<ModerationNote> loadModerationNotesForFlag(int flagId) throws SQLException { 
+
         List<ModerationNote> notes = new ArrayList<>();
         String sql = "SELECT * FROM moderationNotes WHERE flag_id = ? ORDER BY created_at DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -2401,7 +3416,8 @@ public class DatabaseHelper {
     /**
      * Creates the notifications table if it doesn't exist.
      */
-    public void createNotificationsTable() throws SQLException {
+    public void createNotificationsTable() throws SQLException { 
+
         String createTableSQL = """
             CREATE TABLE IF NOT EXISTS notifications (
                 notification_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -2425,7 +3441,8 @@ public class DatabaseHelper {
     /**
      * Creates indexes for better notification query performance.
      */
-    public void createNotificationIndexes() throws SQLException {
+    public void createNotificationIndexes() throws SQLException { 
+
         String[] indexes = {
                 "CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read)",
                 "CREATE INDEX IF NOT EXISTS idx_notifications_type ON notifications(type)"
@@ -2445,7 +3462,8 @@ public class DatabaseHelper {
      * @param notification The notification to insert
      * @return true if successful, false otherwise
      */
-    public boolean insertNotification(Notification notification) {
+    public boolean insertNotification(Notification notification) { 
+
         String sql = """
             INSERT INTO notifications (user_id, type, related_id, title, message, timestamp, is_read)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -2487,7 +3505,8 @@ public class DatabaseHelper {
      * @return List of unread notifications
      * @throws SQLException if database error occurs
      */
-    public List<Notification> getUnreadNotifications(int userId) throws SQLException {
+    public List<Notification> getUnreadNotifications(int userId) throws SQLException { 
+
         String sql = """
             SELECT * FROM notifications 
             WHERE user_id = ? AND is_read = FALSE 
@@ -2524,7 +3543,8 @@ public class DatabaseHelper {
      * @return list of notifications (empty on error)
      * @throws SQLException if needed (this version logs and returns empty list on error)
      */
-    public List<Notification> getAllNotifications(int userId) throws SQLException {
+    public List<Notification> getAllNotifications(int userId) throws SQLException { 
+
 
         List<Notification> notifications = new ArrayList<>();
         String sql = "SELECT notification_id, user_id, type, related_id, title, message, timestamp, is_read "
@@ -2575,7 +3595,8 @@ public class DatabaseHelper {
      * @return true if successful
      * @throws SQLException if database error occurs
      */
-    public boolean markNotificationAsRead(int notificationId) throws SQLException {
+    public boolean markNotificationAsRead(int notificationId) throws SQLException { 
+
         String sql = "UPDATE notifications SET is_read = TRUE WHERE notification_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, notificationId);
@@ -2594,7 +3615,8 @@ public class DatabaseHelper {
      * @return number of notifications updated
      * @throws SQLException if database error occurs
      */
-    public int markAllNotificationsAsRead(int userId) throws SQLException {
+    public int markAllNotificationsAsRead(int userId) throws SQLException { 
+
 
         String sql = "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -2615,7 +3637,8 @@ public class DatabaseHelper {
      * @return number of unread notifications
      * @throws SQLException if database error occurs
      */
-    public int getUnreadNotificationCount(int userId) throws SQLException {
+    public int getUnreadNotificationCount(int userId) throws SQLException { 
+
 
         String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -2638,7 +3661,8 @@ public class DatabaseHelper {
      * @return true if successful
      * @throws SQLException if database error occurs
      */
-    public boolean deleteNotification(int notificationId) throws SQLException {
+    public boolean deleteNotification(int notificationId) throws SQLException { 
+
         String sql = "DELETE FROM notifications WHERE notification_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, notificationId);
@@ -2656,7 +3680,15 @@ public class DatabaseHelper {
 
     // Notification helpers
 
-    public void notifyAdminsOfNewRequest(AdminRequest request) {
+
+/** 
+ *
+ * Notify admins of new request
+ *
+ * @param request  the request. 
+ */
+    public void notifyAdminsOfNewRequest(AdminRequest request) { 
+
         try {
             // Get all admin users
             List<User> admins = getUsersByRole(User.Role.ADMIN);
@@ -2696,7 +3728,16 @@ public class DatabaseHelper {
         }
     }
 
-    public void notifyRequestorOfUpdate(AdminRequest request, String updateMessage) {
+
+/** 
+ *
+ * Notify requestor of update
+ *
+ * @param request  the request. 
+ * @param updateMessage  the update message. 
+ */
+    public void notifyRequestorOfUpdate(AdminRequest request, String updateMessage) { 
+
         String title = "Admin Request #" + request.getRequestId() + " Updated";
         String message = updateMessage;
 
@@ -2713,7 +3754,16 @@ public class DatabaseHelper {
         }
     }
 
-    public void notifyRequestorOfClosure(AdminRequest request, String adminName) {
+
+/** 
+ *
+ * Notify requestor of closure
+ *
+ * @param request  the request. 
+ * @param adminName  the admin name. 
+ */
+    public void notifyRequestorOfClosure(AdminRequest request, String adminName) { 
+
         String title = "Admin Request #" + request.getRequestId() + " Closed";
         String message = String.format(
                 "Your request '%s' has been closed by %s. Click to view details.",
@@ -2734,7 +3784,15 @@ public class DatabaseHelper {
         }
     }
 
-    public void notifyAdminsOfReopenedRequest(AdminRequest request) {
+
+/** 
+ *
+ * Notify admins of reopened request
+ *
+ * @param request  the request. 
+ */
+    public void notifyAdminsOfReopenedRequest(AdminRequest request) { 
+
         try {
             List<User> admins = getUsersByRole(User.Role.ADMIN);
 
@@ -2765,7 +3823,14 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateAdminRequestsTableForCategories() {
+
+/** 
+ *
+ * Update admin requests table for categories
+ *
+ */
+    public void updateAdminRequestsTableForCategories() { 
+
         try (Statement stmt = connection.createStatement()) {
             String addColumn = "ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS category VARCHAR(255) DEFAULT 'OTHER'";
             stmt.execute(addColumn);
@@ -2776,7 +3841,16 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean insertAdminRequest(AdminRequest request) {
+
+/** 
+ *
+ * Insert admin request
+ *
+ * @param request  the request. 
+ * @return boolean
+ */
+    public boolean insertAdminRequest(AdminRequest request) { 
+
         String sql = """
                 INSERT INTO admin_requests
                 (requestor_id, requestor_name, category, title, description, status, timestamp, original_request_id)
@@ -2835,7 +3909,17 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean closeAdminRequest(int requestId, String adminName) {
+
+/** 
+ *
+ * Close admin request
+ *
+ * @param requestId  the request identifier. 
+ * @param adminName  the admin name. 
+ * @return boolean
+ */
+    public boolean closeAdminRequest(int requestId, String adminName) { 
+
         String sql = "UPDATE admin_requests SET status = 'closed' WHERE request_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -2857,7 +3941,16 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean insertAdminAction(AdminAction action) {
+
+/** 
+ *
+ * Insert admin action
+ *
+ * @param action  the action. 
+ * @return boolean
+ */
+    public boolean insertAdminAction(AdminAction action) { 
+
         String sql = """
                 INSERT INTO admin_actions 
                 (request_id, admin_id, admin_name, action_description, timestamp)
@@ -2893,7 +3986,15 @@ public class DatabaseHelper {
         }
     }
 
-    public List<AdminRequest> loadOpenAdminRequests() {
+
+/** 
+ *
+ * Load open admin requests
+ *
+ * @return List<AdminRequest>
+ */
+    public List<AdminRequest> loadOpenAdminRequests() { 
+
         List<AdminRequest> requests = new ArrayList<>();
         String sql = "SELECT * FROM admin_requests WHERE status = 'open' ORDER BY timestamp DESC";
 
@@ -2928,7 +4029,15 @@ public class DatabaseHelper {
         return requests;
     }
 
-    public List<AdminRequest> loadClosedAdminRequests() {
+
+/** 
+ *
+ * Load closed admin requests
+ *
+ * @return List<AdminRequest>
+ */
+    public List<AdminRequest> loadClosedAdminRequests() { 
+
         List<AdminRequest> requests = new ArrayList<>();
         String sql = "SELECT * FROM admin_requests WHERE status = 'closed' ORDER BY timestamp DESC";
 
@@ -2963,7 +4072,16 @@ public class DatabaseHelper {
         return requests;
     }
 
-    public AdminRequest getAdminRequestById(int requestId) {
+
+/** 
+ *
+ * Gets the admin request by identifier
+ *
+ * @param requestId  the request identifier. 
+ * @return the admin request by identifier
+ */
+    public AdminRequest getAdminRequestById(int requestId) { 
+
         String sql = "SELECT * FROM admin_requests WHERE request_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -2995,7 +4113,16 @@ public class DatabaseHelper {
         return null;
     }
 
-    public List<AdminAction> getActionsForRequest(int requestId) {
+
+/** 
+ *
+ * Gets the actions for request
+ *
+ * @param requestId  the request identifier. 
+ * @return the actions for request
+ */
+    public List<AdminAction> getActionsForRequest(int requestId) { 
+
         List<AdminAction> actions = new ArrayList<>();
         String sql = "SELECT * FROM admin_actions WHERE request_id = ? ORDER BY timestamp ASC";
 
@@ -3022,7 +4149,15 @@ public class DatabaseHelper {
         return actions;
     }
 
-    public int getOpenAdminRequestCount() {
+
+/** 
+ *
+ * Gets the open admin request count
+ *
+ * @return the open admin request count
+ */
+    public int getOpenAdminRequestCount() { 
+
         String sql = "SELECT COUNT(*) FROM admin_requests WHERE status = 'open'";
 
         try (Statement stmt = connection.createStatement();
@@ -3040,7 +4175,14 @@ public class DatabaseHelper {
     }
 
     // Initialization helpers: ensure notifications/admin_requests/staff_requests exist
-    public void ensureMissingTablesExist() {
+
+/** 
+ *
+ * Ensure missing tables exist
+ *
+ */
+    public void ensureMissingTablesExist() { 
+
         String createNotifications = "CREATE TABLE IF NOT EXISTS notifications ("
                 + "notification_id INT AUTO_INCREMENT PRIMARY KEY,"
                 + "user_id INT NOT NULL,"
@@ -3104,7 +4246,16 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean insertStaffRequest(StaffRequest request) {
+
+/** 
+ *
+ * Insert staff request
+ *
+ * @param request  the request. 
+ * @return boolean
+ */
+    public boolean insertStaffRequest(StaffRequest request) { 
+
         String createTable = "CREATE TABLE IF NOT EXISTS staff_requests ("
                 + "request_id INT AUTO_INCREMENT PRIMARY KEY,"
                 + "staff_id INT,"
@@ -3162,7 +4313,20 @@ public class DatabaseHelper {
         }
     }
 
-    public boolean updateStaffRequestStatus(int requestId, String status, String adminRemark, int adminId, String handledByAdminName) {
+
+/** 
+ *
+ * Update staff request status
+ *
+ * @param requestId  the request identifier. 
+ * @param status  the status. 
+ * @param adminRemark  the admin remark. 
+ * @param adminId  the admin identifier. 
+ * @param handledByAdminName  the handled by admin name. 
+ * @return boolean
+ */
+    public boolean updateStaffRequestStatus(int requestId, String status, String adminRemark, int adminId, String handledByAdminName) { 
+
         String sql = "UPDATE staff_requests SET status = ?, admin_response = ?, handled_by_admin_id = ?, handled_by_admin_name = ? WHERE request_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, status);
@@ -3182,7 +4346,15 @@ public class DatabaseHelper {
         }
     }
 
-    public List<StaffRequest> loadAllStaffRequests() {
+
+/** 
+ *
+ * Load all staff requests
+ *
+ * @return List<StaffRequest>
+ */
+    public List<StaffRequest> loadAllStaffRequests() { 
+
         List<StaffRequest> list = new ArrayList<>();
         String sql = "SELECT request_id, staff_id, staff_name, request_type, title, description, status, timestamp, admin_response, handled_by_admin_id, handled_by_admin_name FROM staff_requests ORDER BY timestamp DESC";
         try (Statement stmt = connection.createStatement();
@@ -3213,7 +4385,16 @@ public class DatabaseHelper {
         return list;
     }
 
-    public Integer getAuthorIdForFlag(ModerationFlag flag) {
+
+/** 
+ *
+ * Gets the author identifier for flag
+ *
+ * @param flag  the flag. 
+ * @return the author identifier for flag
+ */
+    public Integer getAuthorIdForFlag(ModerationFlag flag) { 
+
         String query = switch (flag.getItemType()) {
             case "question" -> "SELECT user_id FROM questions WHERE question_id = ?";
             case "answer" -> "SELECT user_id FROM answers WHERE answer_id = ?";
@@ -3234,7 +4415,16 @@ public class DatabaseHelper {
         return null;
     }
 
-    public int getUserIdForFlag(ModerationFlag flag) {
+
+/** 
+ *
+ * Gets the user identifier for flag
+ *
+ * @param flag  the flag. 
+ * @return the user identifier for flag
+ */
+    public int getUserIdForFlag(ModerationFlag flag) { 
+
         String query = switch (flag.getItemType()) {
             case "question" -> "SELECT user_id FROM questions WHERE question_id = ?";
             case "answer" -> "SELECT user_id FROM answers WHERE answer_id = ?";
@@ -3256,7 +4446,17 @@ public class DatabaseHelper {
 
     // Reviewer Profile
 
-    public String getReviewerExperience(int reviewerId) throws SQLException {
+
+/** 
+ *
+ * Gets the reviewer experience
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @return the reviewer experience
+ * @throws   SQLException 
+ */
+    public String getReviewerExperience(int reviewerId) throws SQLException { 
+
         String sql = "SELECT experience FROM reviewerProfile WHERE reviewer_id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, reviewerId);
@@ -3267,7 +4467,18 @@ public class DatabaseHelper {
         return "";
     }
 
-    public boolean updateReviewerExperience(int reviewerId, String experience) throws SQLException {
+
+/** 
+ *
+ * Update reviewer experience
+ *
+ * @param reviewerId  the reviewer identifier. 
+ * @param experience  the experience. 
+ * @return boolean
+ * @throws   SQLException 
+ */
+    public boolean updateReviewerExperience(int reviewerId, String experience) throws SQLException { 
+
         String sql = "UPDATE reviewerProfile SET experience = ? WHERE reviewer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, experience);
@@ -3288,7 +4499,17 @@ public class DatabaseHelper {
 
     // End of class
     //Edits
-    public void insertEditHistory(Edits edit, int questionId) throws SQLException {
+
+/** 
+ *
+ * Insert edit history
+ *
+ * @param edit  the edit. 
+ * @param questionId  the question identifier. 
+ * @throws   SQLException 
+ */
+    public void insertEditHistory(Edits edit, int questionId) throws SQLException { 
+
         String sql = "INSERT INTO edits (question_id, old_title, old_description, new_title, new_description, edited_by, edit_time) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -3305,7 +4526,17 @@ public class DatabaseHelper {
         }
     }
     
-    public List<Edits> loadEditHistoryForQuestion(int questionId) throws SQLException {
+
+/** 
+ *
+ * Load edit history for question
+ *
+ * @param questionId  the question identifier. 
+ * @return List<Edits>
+ * @throws   SQLException 
+ */
+    public List<Edits> loadEditHistoryForQuestion(int questionId) throws SQLException { 
+
         List<Edits> edits = new ArrayList<>();
 
         String sql = "SELECT old_title, old_description, new_title, new_description, edited_by, edit_time "

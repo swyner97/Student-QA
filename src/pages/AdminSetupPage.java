@@ -18,15 +18,35 @@ import model.User;
 
 import java.sql.SQLException;
 
+
+ /**
+ * The class Admin setup page
+ */ 
 public class AdminSetupPage {
 
     private final DatabaseHelper databaseHelper;
 
-    public AdminSetupPage(DatabaseHelper databaseHelper) {
+
+/** 
+ *
+ * It is a constructor. 
+ *
+ * @param databaseHelper  the database helper. 
+ */
+    public AdminSetupPage(DatabaseHelper databaseHelper) { 
+
         this.databaseHelper = databaseHelper;
     }
 
-    public void show(Stage primaryStage) {
+
+/** 
+ *
+ * Show
+ *
+ * @param primaryStage  the primary stage. 
+ */
+    public void show(Stage primaryStage) { 
+
 
         HBox mainContainer = new HBox(30);
         mainContainer.setAlignment(Pos.CENTER);
@@ -69,7 +89,17 @@ public class AdminSetupPage {
         StatusData.setScene(primaryStage, mainContainer);
     }
 
-    private VBox buildAdminPane(VBox card, Stage primaryStage) {
+
+/** 
+ *
+ * Build admin pane
+ *
+ * @param card  the card. 
+ * @param primaryStage  the primary stage. 
+ * @return VBox
+ */
+    private VBox buildAdminPane(VBox card, Stage primaryStage) { 
+
         VBox pane = new VBox(15);
         pane.setAlignment(Pos.TOP_CENTER);
 
@@ -134,8 +164,8 @@ public class AdminSetupPage {
         // Requirements & Error label
         Label requirementsLabel = new Label(
                 "Requirements:\n" +
-                        "• Username: 4-16 chars, starts with letter\n" +
-                        "• Password: 8+ chars, upper, lower, digit, special"
+                        "Â? Username: 4-16 chars, starts with letter\n" +
+                        "Â? Password: 8+ chars, upper, lower, digit, special"
         );
         requirementsLabel.setStyle("-fx-text-fill: #666666; -fx-font-size: 10px;");
         requirementsLabel.setWrapText(true);
@@ -172,7 +202,19 @@ public class AdminSetupPage {
         return pane;
     }
 
-    private void handleSetup(TextField usernameField, PasswordField passwordField, Label errorLabel, Button setupBtn, Stage primaryStage) {
+
+/** 
+ *
+ * Handle setup
+ *
+ * @param usernameField  the username field. 
+ * @param passwordField  the password field. 
+ * @param errorLabel  the error label. 
+ * @param setupBtn  the setup btn. 
+ * @param primaryStage  the primary stage. 
+ */
+    private void handleSetup(TextField usernameField, PasswordField passwordField, Label errorLabel, Button setupBtn, Stage primaryStage) { 
+
         String userName = usernameField.getText() == null ? "" : usernameField.getText().trim();
         String password = passwordField.getText() == null ? "" : passwordField.getText();
 
