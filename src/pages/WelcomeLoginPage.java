@@ -1170,17 +1170,10 @@ public class WelcomeLoginPage {
 						reason
 				);
 				
-				//StatusData.databaseHelper.toggleQuestionFlag(questionId);
+		
 				WelcomeLoginPage.this.reloadQuestions();
-				//updateFlagButtonStyle(q);
-				if (StatusData.instructorHomePageInstance != null) {
-					StatusData.instructorHomePageInstance.refreshUsers();
-				}
-				if (StatusData.adminHomePageInstance != null) {
-					StatusData.adminHomePageInstance.refreshUsers();
-				}
-				if (StatusData.staffPageInstance != null) {
-					StatusData.staffPageInstance.refreshUsers();
+				if (StatusData.onFlagRefresh != null) {
+				    StatusData.onFlagRefresh.run();
 				}
 				popup.close();
 			} catch (SQLException ex) {

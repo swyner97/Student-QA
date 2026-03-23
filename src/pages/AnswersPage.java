@@ -59,6 +59,7 @@ public class AnswersPage {
 	public void show(Stage stage, User user) {
         this.user = user;
         answers = new Answers(StatusData.databaseHelper);
+      
 
         stage.setTitle("Answers for Question #" + question.getQuestionId());
 
@@ -1063,18 +1064,13 @@ public class AnswersPage {
 						reason
 				);
 				
-				//StatusData.databaseHelper.toggleQuestionFlag(questionId);
+		
 				AnswersPage.this.reloadAnswers();
-				//updateFlagButtonStyle(q);
-				if (StatusData.instructorHomePageInstance != null) {
-					StatusData.instructorHomePageInstance.refreshUsers();
+
+				if (StatusData.onFlagRefresh != null) {
+				    StatusData.onFlagRefresh.run();
 				}
-				if (StatusData.adminHomePageInstance != null) {
-					StatusData.adminHomePageInstance.refreshUsers();
-				}
-				if (StatusData.staffPageInstance != null) {
-					StatusData.staffPageInstance.refreshUsers();
-				}
+				
 				popup.close();
 			} catch (SQLException ex) {
 				ex.printStackTrace();

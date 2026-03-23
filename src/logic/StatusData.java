@@ -1,5 +1,8 @@
 package logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import databasePart1.DatabaseHelper;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -31,9 +34,11 @@ public class StatusData {
     public static final int WINDOW_WIDTH = 1000;
     public static final int WINDOW_HEIGHT = 800;
     
-    public static InstructorHomePage instructorHomePageInstance;
-    public static AdminHomePage adminHomePageInstance;
-    public static StaffPage staffPageInstance;
+//    public static InstructorHomePage instructorHomePageInstance;
+//    public static AdminHomePage adminHomePageInstance;
+//    public static StaffPage staffPageInstance;
+    
+    public static Runnable onFlagRefresh;
     
     public static double getScaledWidth() {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
