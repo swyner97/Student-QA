@@ -24,11 +24,6 @@ public class UserQAMenu extends Application {
 			searchQsPage.show(new Stage(), StatusData.currUser);
 		});
 		
-		searchAsButton.setOnAction(e -> {
-			SearchAsPage searchAsPage = new SearchAsPage();
-			searchAsPage.show(StatusData.primaryStage, StatusData.currUser);
-		});
-		
 		searchMineButton.setOnAction(e -> {
 			MyPostsPage searchMinePage = new MyPostsPage();
 			Stage searchMineStage = new Stage();
