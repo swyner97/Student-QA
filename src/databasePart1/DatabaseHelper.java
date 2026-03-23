@@ -31,23 +31,34 @@ public class DatabaseHelper {
 
     private Connection connection = null;
     private Statement statement = null;
+    
+    public DatabaseHelper() { }
+    
+    public DatabaseHelper(Connection connection) {
+        this.connection = connection;
+        try {
+            this.statement = connection.createStatement();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    
 
     public void connectToDatabase() throws SQLException {
         try {
             Class.forName(JDBC_DRIVER);
-            System.out.println("Connecting to database...");
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             statement = connection.createStatement();
 
-            ensureMissingTablesExist();
-            createTables();
+            // Only create tables if not already using injected connection
+            if (connection != null && connection.getMetaData().getURL().contains("mem") == false) {
+                ensureMissingTablesExist();
+                createTables();
+            }
 
         } catch (ClassNotFoundException e) {
-            System.err.println("JDBC Driver not found: " + e.getMessage());
             throw new SQLException("JDBC Driver not found", e);
-        } catch (SQLException e) {
-            System.err.println("Database connection failed: " + e.getMessage());
-            throw e;
         }
     }
     
@@ -907,11 +918,12 @@ public class DatabaseHelper {
             try {
                 pstmt.setTimestamp(4, Timestamp.valueOf(question.getTimestamp()));
             } catch (Exception e) {
-                // If timestamp is invalid, use current timestamp
                 pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
             }
 
-            pstmt.setBoolean(5, question.isResolved());
+            // Store status as text, not boolean
+            pstmt.setString(5, question.isResolved() ? "Resolved" : "Unresolved");
+
             if (question.getFollowUp() > 0) {
                 pstmt.setInt(6, question.getFollowUp());
             } else {
@@ -924,8 +936,8 @@ public class DatabaseHelper {
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    int generateId = generatedKeys.getInt(1);
-                    question.setQuestionId(generateId);
+                    int generatedId = generatedKeys.getInt(1);
+                    question.setQuestionId(generatedId);
                 }
             }
             System.out.println("Question author: " + question.getAuthor() + ", userId: " + question.getUserId());
@@ -1013,7 +1025,7 @@ public class DatabaseHelper {
                     Timestamp ts = rs.getTimestamp("timestamp");
                     String timestamp = ts != null ? ts.toLocalDateTime().toString() : null;
                     String statusStr = rs.getString("status");
-                    boolean resolved = "Resolved".equalsIgnoreCase(statusStr); 
+                    boolean resolved = "Resolved".equalsIgnoreCase(statusStr);
                     int followUp = rs.getInt("follow_up");
 
                     Question q = new Question(id, userId, author, title, description);
@@ -1234,9 +1246,9 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return result;
     }
+    
     // Search answers
     public List<Answer> searchAnswers(String keyword, String author, Boolean isSolution) {
         List<Answer> results = new ArrayList<>();
@@ -1293,7 +1305,9 @@ public class DatabaseHelper {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, question.getTitle());
             pstmt.setString(2, question.getDescription());
-            pstmt.setBoolean(3, question.isResolved());
+
+            // Store status as text, not boolean
+            pstmt.setString(3, question.isResolved() ? "Resolved" : "Unresolved");
 
             try {
                 pstmt.setTimestamp(4, Timestamp.valueOf(question.getTimestamp()));
@@ -1314,7 +1328,6 @@ public class DatabaseHelper {
             throw e;
         }
     }
-
     // Delete a question by ID
     public void deleteQuestion(int questionId) throws SQLException {
         // First delete all answers associated with this question
@@ -1465,13 +1478,13 @@ public class DatabaseHelper {
                     String timestamp = ts != null ? ts.toLocalDateTime().toString() : null;
 
                     Answer answer = new Answer(
-                        rs.getInt("answer_id"),
-                        rs.getInt("user_id"),
-                        rs.getInt("question_id"),
-                        rs.getString("author"),
-                        rs.getString("content"),
-                        timestamp,
-                        isSolution
+                            rs.getInt("answer_id"),
+                            rs.getInt("user_id"),
+                            rs.getInt("question_id"),
+                            rs.getString("author"),
+                            rs.getString("content"),
+                            timestamp,
+                            isSolution
                     );
                     answers.add(answer);
                 }

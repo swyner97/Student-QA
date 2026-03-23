@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import databasePart1.DatabaseHelper;
 
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.List;
 
@@ -21,16 +20,13 @@ class DatabaseHelperTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        helper = new DatabaseHelper();
         conn = DriverManager.getConnection(
                 "jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1",
                 "sa",
                 ""
         );
 
-        setPrivateField(helper, "connection", conn);
-        setPrivateField(helper, "statement", conn.createStatement());
-
+        helper = new DatabaseHelper(conn);
         createSchema(conn);
     }
 
@@ -53,7 +49,7 @@ class DatabaseHelperTest {
         assertEquals("Alice", q.getAuthor());
         assertEquals("Java help", q.getTitle());
         assertEquals("Need help with JDBC", q.getDescription());
-        assertEquals("Resolved", q.getStatusText());
+        assertTrue(q.isResolved());
     }
 
     @Test
@@ -72,8 +68,6 @@ class DatabaseHelperTest {
         assertEquals(1, a.getQuestionId());
         assertEquals("Bob", a.getAuthor());
         assertEquals("Try using PreparedStatement", a.getContent());
-
-     
         assertEquals("2026-03-23T11:00:00", a.getTimestamp());
     }
 
@@ -106,9 +100,13 @@ class DatabaseHelperTest {
     }
 
     private void createSchema(Connection conn) throws SQLException {
-        try (Statement st = conn.createStatement()) {
-            st.execute("""
-                CREATE TABLE cse360users (
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("DROP TABLE IF EXISTS answers");
+            stmt.execute("DROP TABLE IF EXISTS questions");
+            stmt.execute("DROP TABLE IF EXISTS cse360Users");
+
+            stmt.execute("""
+                CREATE TABLE cse360Users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     userName VARCHAR(255),
                     password VARCHAR(255),
@@ -121,41 +119,28 @@ class DatabaseHelperTest {
                 )
             """);
 
-            st.execute("""
+            stmt.execute("""
                 CREATE TABLE questions (
-                    question_id INT PRIMARY KEY,
+                    question_id INT AUTO_INCREMENT PRIMARY KEY,
                     author VARCHAR(50),
                     title VARCHAR(200),
                     description VARCHAR(5000),
                     timestamp TIMESTAMP,
                     status VARCHAR(20),
-                    follow_up INT,
+                    follow_up INT NULL,
                     user_id INT
                 )
             """);
 
-            st.execute("""
+            stmt.execute("""
                 CREATE TABLE answers (
-                    answer_id INT PRIMARY KEY,
+                    answer_id INT AUTO_INCREMENT PRIMARY KEY,
                     user_id INT,
                     question_id INT,
                     author VARCHAR(50),
                     content VARCHAR(2000),
                     timestamp TIMESTAMP,
                     is_solution BOOLEAN
-                )
-            """);
-
-            st.execute("""
-                CREATE TABLE edits (
-                    edit_id INT AUTO_INCREMENT PRIMARY KEY,
-                    question_id INT NOT NULL,
-                    old_title TEXT NOT NULL,
-                    old_description TEXT NOT NULL,
-                    new_title TEXT NOT NULL,
-                    new_description TEXT NOT NULL,
-                    edited_by TEXT NOT NULL,
-                    edit_time TEXT NOT NULL
                 )
             """);
         }
@@ -211,11 +196,5 @@ class DatabaseHelperTest {
             ps.setBoolean(7, isSolution);
             ps.executeUpdate();
         }
-    }
-
-    private void setPrivateField(Object target, String fieldName, Object value) throws Exception {
-        Field field = DatabaseHelper.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(target, value);
     }
 }
