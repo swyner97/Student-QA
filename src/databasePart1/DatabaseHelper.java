@@ -1186,7 +1186,7 @@ public class DatabaseHelper {
         StringBuilder sql = new StringBuilder("SELECT * FROM questions WHERE 1=1");
 
         if (keyword != null && !keyword.isBlank()) {
-            sql.append(" AND (title LIKE ? OR description LIKE ?)");
+            sql.append(" AND (LOWER(title) LIKE ? OR LOWER(description) LIKE ?)");
         }
         if (author != null && !author.isBlank()) {
             sql.append(" AND LOWER(author) LIKE ?");
@@ -1194,21 +1194,22 @@ public class DatabaseHelper {
         if (resolved != null) {
             sql.append(" AND LOWER(status) = ?");
         }
-        
+
         try (PreparedStatement pstmt = connection.prepareStatement(sql.toString())) {
             int index = 1;
 
             if (keyword != null && !keyword.isBlank()) {
-                pstmt.setString(index++, "%" + keyword + "%");
-                pstmt.setString(index++, "%" + keyword + "%");
+                String k = "%" + keyword.trim().toLowerCase() + "%";
+                pstmt.setString(index++, k);
+                pstmt.setString(index++, k);
             }
             if (author != null && !author.isBlank()) {
-                pstmt.setString(index++, "%" + author.toLowerCase() + "%");
+                pstmt.setString(index++, "%" + author.trim().toLowerCase() + "%");
             }
             if (resolved != null) {
-                pstmt.setString(index++, resolved ? "resolved" : "false");
+                pstmt.setString(index++, resolved ? "resolved" : "unresolved");
             }
-            
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     int id = rs.getInt("question_id");
@@ -1220,9 +1221,7 @@ public class DatabaseHelper {
                     String statusStr = rs.getString("status");
                     boolean res = "Resolved".equalsIgnoreCase(statusStr);
                     int followUp = rs.getInt("follow_up");
-                    if (rs.wasNull()) {
-                        followUp = 0;
-                    }
+                    if (rs.wasNull()) followUp = 0;
 
                     Question q = new Question(id, -1, auth, title, description);
                     q.setTimestamp(time);
@@ -1235,9 +1234,9 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return result;
     }
-
     // Search answers
     public List<Answer> searchAnswers(String keyword, String author, Boolean isSolution) {
         List<Answer> results = new ArrayList<>();
@@ -1257,10 +1256,10 @@ public class DatabaseHelper {
             int paramIndex = 1;
 
             if (keyword != null && !keyword.isBlank()) {
-                pstmt.setString(paramIndex++, "%" + keyword.toLowerCase() + "%");
+                pstmt.setString(paramIndex++, "%" + keyword.trim().toLowerCase() + "%");
             }
             if (author != null && !author.isBlank()) {
-                pstmt.setString(paramIndex++, "%" + author.toLowerCase() + "%");
+                pstmt.setString(paramIndex++, "%" + author.trim().toLowerCase() + "%");
             }
             if (isSolution != null) {
                 pstmt.setBoolean(paramIndex++, isSolution);
@@ -1275,9 +1274,9 @@ public class DatabaseHelper {
                     String content = rs.getString("content");
                     Timestamp ts = rs.getTimestamp("timestamp");
                     String timestamp = ts != null ? ts.toLocalDateTime().toString() : null;
-                    Boolean solution = rs.getBoolean("is_solution");
+                    boolean solution = rs.getBoolean("is_solution");
 
-                    Answer a = new Answer(answerId, -1, questionId, ansAuthor, content, timestamp, solution);
+                    Answer a = new Answer(answerId, userId, questionId, ansAuthor, content, timestamp, solution);
                     results.add(a);
                 }
             }
@@ -1285,10 +1284,9 @@ public class DatabaseHelper {
             e.printStackTrace();
             System.err.println("Error searching answers: " + e.getMessage());
         }
+
         return results;
-
     }
-
     // Update existing question (title, description, status)
     public void updateQuestion(Question question) throws SQLException {
         String sql = "UPDATE questions SET title = ?, description = ?, status = ?, timestamp = ? WHERE question_id = ?";
@@ -1418,14 +1416,6 @@ public class DatabaseHelper {
         }
     }
     
-//    public void updateQuestionStatus(int questionId, String status) throws SQLException {
-//        String sql = "UPDATE questions SET status = ? WHERE question_id = ?";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, status);
-//            ps.setInt(2, questionId);
-//            ps.executeUpdate();
-//        }
-//    }
     
     public int updateAnswerSolutionStatus(int answerId, boolean isSolution) throws SQLException {
         String sql = "UPDATE answers SET is_solution = ? WHERE answer_id = ?";
@@ -1435,21 +1425,7 @@ public class DatabaseHelper {
             return ps.executeUpdate();
         }
     }
-    
-//    public void markQuestionResolved(int questionId) throws SQLException {
-//        String sql = "UPDATE questions SET status = 'resolved' WHERE question_id = ?";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setInt(1, questionId);
-//            ps.executeUpdate();
-//        }
-//    }
-//    public void markQuestionUnresolved(int questionId) throws SQLException {
-//        String sql = "UPDATE questions SET status = 'resolved' WHERE question_id = ?";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setInt(1, questionId);
-//            ps.executeUpdate();
-//        }
-//    }
+  
     
     public List<Answer> getAnswersByUser(String username) {
         List<Answer> answersByUser = new ArrayList<>();
@@ -1476,7 +1452,6 @@ public class DatabaseHelper {
         }
         return answersByUser;
     }
-
     public List<Answer> getAnswersByQuestionId(int questionId) throws SQLException {
         List<Answer> answers = new ArrayList<>();
 
@@ -1485,14 +1460,18 @@ public class DatabaseHelper {
             ps.setInt(1, questionId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                	boolean isSolution = rs.getBoolean("is_solution");
+                    boolean isSolution = rs.getBoolean("is_solution");
+                    Timestamp ts = rs.getTimestamp("timestamp");
+                    String timestamp = ts != null ? ts.toLocalDateTime().toString() : null;
+
                     Answer answer = new Answer(
                         rs.getInt("answer_id"),
                         rs.getInt("user_id"),
                         rs.getInt("question_id"),
                         rs.getString("author"),
                         rs.getString("content"),
-                        sql, isSolution
+                        timestamp,
+                        isSolution
                     );
                     answers.add(answer);
                 }
@@ -1610,7 +1589,7 @@ public class DatabaseHelper {
             rs.getString("content"),
             rs.getTimestamp("timestamp").toLocalDateTime(),
             rs.getBoolean("is_read"),
-            rs.getBoolean("is_public")   // assuming you added is_public
+            rs.getBoolean("is_public")  
         );
         
         if (c.getAnswerId() > 0) {

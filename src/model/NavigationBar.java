@@ -40,37 +40,15 @@ public class NavigationBar extends ToolBar {
         this.getItems().add(welcomePageButton);
         this.getItems().add(new Separator(Orientation.VERTICAL));
 
-
-        MenuButton searchMenu = createStyledMenuButton("🔍 Search");
-        MenuItem searchGeneral = new MenuItem("General Search");
-        searchGeneral.setOnAction(_ -> {
-            navigate("General Search (UserQAMenu)", () -> {
-                UserQAMenu qaMenuPage = new UserQAMenu();
-                qaMenuPage.start(StatusData.primaryStage);
-            });
+        Button searchButton = createStyledButton("🔍 Search");
+        searchButton.setOnAction(e -> {
+            if (StatusData.primaryStage != null) {
+                navigate("Search Questions", () ->
+                    new SearchPage().show(StatusData.primaryStage, StatusData.currUser)
+                );
+            }
         });
-        MenuItem searchQs = new MenuItem("Search Questions");
-        searchQs.setOnAction(_ -> {
-            navigate("Search Questions", () ->
-                new SearchPage().show(StatusData.primaryStage, StatusData.currUser)
-            );
-        });
-        MenuItem searchAs = new MenuItem("Search Answers");
-        searchAs.setOnAction(_ -> {
-            navigate("Search Answers", () ->
-                new SearchAsPage().show(StatusData.primaryStage, StatusData.currUser)
-            );
-        });
-        MenuItem searchMyPosts = new MenuItem("My Posts");
-        searchMyPosts.setOnAction(_ -> {
-            navigate("My Posts", () -> {
-                MyPostsPage postsPage = new MyPostsPage();
-                Stage postsStage = new Stage();
-                postsPage.show(postsStage);
-            });
-        });
-        searchMenu.getItems().addAll(searchGeneral, searchQs, searchAs, new SeparatorMenuItem(), searchMyPosts);
-        this.getItems().add(searchMenu);
+        this.getItems().add(searchButton);
         this.getItems().add(new Separator(Orientation.VERTICAL));
 
 

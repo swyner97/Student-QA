@@ -74,10 +74,6 @@ public class Questions {
         return questions.get(questionId);
     }
 
-    //public List<Question> readAll() {
-      //  return new ArrayList<>(questions.values());
-    //}
-
     public Result update(int questionId, int userID, String title,
             String description, boolean resolved, List<String> tags, User user) {
     		Question question = questions.get(questionId);
